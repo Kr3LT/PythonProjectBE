@@ -147,12 +147,12 @@ def GetHoaDonByMaKhachHang(maKhachHang):
     return jsonify(HoaDonService.GetHoaDonByMaKhachHang(maKhachHang))
 
 
-@app.route("detail-purchase-history/<int:ma-don-hang>", method=["GET"])
+@app.route("detail-purchase-history/<int:ma-hoa-don>", method=["GET"])
 def GetByMaHoaDon(maHoaDon):
     return jsonify(ChiTietHoaDonService.GetByMaHoaDon(maHoaDon))
 
 
-@app.route("confirm-payment/<int:ma-don-hang>", method=["PUT"])
+@app.route("confirm-payment/<int:ma-hoa-don>", method=["PUT"])
 def XacNhanHoaDon(maHoaDon):
     HoaDonService.XacNhanHoaDon(maHoaDon)
     return jsonify(ChiTietHoaDonService.GetByMaHoaDon(maHoaDon))
