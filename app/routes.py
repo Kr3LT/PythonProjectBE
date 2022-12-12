@@ -5,8 +5,8 @@ from flask_login import login_user, current_user, logout_user, login_required
 from flask import request, jsonify, send_from_directory
 from werkzeug.urls import url_parse
 from werkzeug.utils import secure_filename
-from app.models import SanPhams, LoaiSanPhams, ChiTietSanPhams
-from app.Service import SanPhamService, ChiTietSanPhamService, ChiTietHoaDonService, HoaDonService
+from app.models import SanPhams,  ChiTietSanPhams
+from app.Service import SanPhamService, ChiTietSanPhamService, KhachHangService, LoaiSanPhamService, ChiTietHoaDonService, HoaDonService
 
 
 def allowed_file(filename):
@@ -151,8 +151,70 @@ def GetHoaDonByMaKhachHang(maKhachHang):
 def GetByMaHoaDon(maHoaDon):
     return jsonify(ChiTietHoaDonService.GetByMaHoaDon(maHoaDon))
 
+# ===================================================================================================== #
+# Loại sản phẩm:
+@app.route('/category', methods=["GET"])
+def getAllCategory():
+    CategoryList = LoaiSanPhamService.getAllLoaiSanPham()
+    return jsonify(CategoryList)
 
-@app.route("confirm-payment/<int:maHoaDon>", method=["PUT"])
+@app.route('/category', methods = ['POST'])
+@login_required
+def createCategory():
+    CategoryJson = request.get_json()
+    Category = LoaiSanPhamService.createLoaiSanPham(MaLoaiSanPham= CategoryJson['MaLoaiSanPham'],
+                                                    TenLoaiSanPham= CategoryJson['TenLoaiSanPham'])
+    if Category is None:
+        return "Create Category Fail",500
+    return "Create Category Success", 201
+
+@app.route('/category/<int:MaLoaiSanPham>', methods = ['POST'])
+@login_required
+def updateCategoryByCategoryId(MaLoaiSanPham):
+    CategoryJson = request.get_json()
+    Action = CategoryJson['action']
+    if Action == "Update":
+        Category = LoaiSanPhamService.updateLoaiSanPham(MaLoaiSanPham = MaLoaiSanPham, TenLoaiSanPham = CategoryJson['TenLoaiSanPham'])
+        if Category is None:
+            return "Update Category detail fail",500
+        return "Update Category Success", 200
+    elif Action == "Delete":
+        LoaiSanPhamService.deleteLoaiSanPham(MaLoaiSanPham = MaLoaiSanPham)
+        return "Delete Category Success",200
+    return "No action specified",400
+
+# ===================================================================================================== #
+# Khách hàng:
+@app.route('/customer', methods=["GET"])
+def getAllCustomer():
+    CustomerList = KhachHangService.getAllKhachHang()
+    return jsonify(CustomerList)
+
+@app.route('/customer', methods = ['POST'])
+def createCustomer():
+    CustomerJson = request.get_json()
+    Customer = KhachHangService.createKhachHang(MaKhachHang = CustomerJson['MaKhachHang'], TenKhachHang = CustomerJson['TenKhachHang'],
+                              SoDienThoai = CustomerJson['SoDienThoai'], DiaChi = CustomerJson['DiaChi'])   
+    if Customer is None:
+        return "Create Customer Fail",500
+    return "Create Customer Success", 201
+
+@app.route('/customer/<int:MaKhachHang>', methods = ['POST'])
+@login_required
+def updateCustomerByCustomerId(MaKhachHang):
+    CustomerJson = request.get_json()
+    Action = CustomerJson['action']
+    if Action == "Update":
+        Customer = KhachHangService.updateKhachHang(MaKhachHang = MaKhachHang, TenKhachHang = CustomerJson['TenKhachHang'],
+                              SoDienThoai = CustomerJson['SoDienThoai'], DiaChi = CustomerJson['DiaChi'])
+        if Customer is None:
+            return "Update Customer detail fail",500
+        return "Update Customer Success", 200
+    elif Action == "Delete":
+        LoaiSanPhamService.deleteLoaiSanPham(MaKhachHang = MaKhachHang)
+        return "Delete Customer Success",200
+    return "No action specified",400
+@app.route("confirm-payment/<int:ma-hoa-don>", method=["PUT"])
 def XacNhanHoaDon(maHoaDon):
     HoaDonService.XacNhanHoaDon(maHoaDon)
     return jsonify(ChiTietHoaDonService.GetByMaHoaDon(maHoaDon))
