@@ -6,6 +6,7 @@ from flask import request, jsonify,send_from_directory
 from werkzeug.urls import url_parse 
 from werkzeug.utils import secure_filename
 from app.models import SanPhams,LoaiSanPhams, ChiTietSanPhams
+from app.Service import SanPhamService,ChiTietSanPhamService
 
 def allowed_file(filename): 
     return '.' in filename and filename.rsplit('.', 1)[1].lower() in app.config['ALLOWED_EXTENSIONS'] 
@@ -26,26 +27,25 @@ def createProduct():
         filename = secure_filename(ProductThumbnail.filename)
         path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
         ProductThumbnail.save(path)
-    newSanpham = SanPhams(MaSanPham=ProductJson['MaSanPham'],TenSanPham=ProductJson['TenSanPham']
+    Product = SanPhamService.createSanPham(MaSanPham=ProductJson['MaSanPham'],TenSanPham=ProductJson['TenSanPham']
                           ,Thumbnail = filename, MaLoaiSanPham = ProductJson['MaLoaiSanPham'])
-    db.session.add(newSanpham)
-    db.session.commit()    
+    if Product is None:
+        return "Create Product Fail", 500
     return "Create Product Success", 201
 
 @app.route('/product', methods=["GET"])
 def getAllProduct():
-    ProductList = SanPhams.query.all()
+    ProductList = SanPhamService.getAllSanPham()
     return jsonify(ProductList)
     
 @app.route('/product/<int:product_id>/', methods = ['GET'])
 def getProductByProductId(product_id):    
-    Product = SanPhams.query.filter_by(MaSanPham = product_id).first_or_404()
+    Product = SanPhamService.getSanPhamById(product_id=product_id)
     return jsonify(Product)
     
 @app.route('/product/<int:product_id>', methods = ['POST'])
 @login_required
 def updateProductByProductId(product_id):
-    Product = SanPhams.query.filter_by(MaSanPham = product_id).first_or_404()
     ProductJson = request.get_json()
     Action = ProductJson['action']
     if Action == "Update":
@@ -56,25 +56,24 @@ def updateProductByProductId(product_id):
             filename = secure_filename(ProductThumbnail.filename)
             path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
             ProductThumbnail.save(path)
-        Product.TenSanPham = ProductJson['TenSanPham']
-        Product.Thumbnail = ProductThumbnail.filename
-        Product.MaLoaiSanPham = ProductJson['MaLoaiSanPham']
-        db.session.commit()
+        Product = SanPhamService.updateSanPham(MaSanPham=product_id,TenSanPham=ProductJson['TenSanPham'],
+                                     Thumbnail=ProductThumbnail.filename,MaLoaiSanPham=ProductJson['MaLoaiSanPham'])
+        if Product is None:
+            return "Update product fails", 500
         return "Update product Success", 200
     elif Action == "Delete":
-        db.session.delete(Product)
-        db.session.commit()
+        SanPhamService.deleteSanPham(MaSanPham=product_id)
         return "Delete product Success",200
     return "No action specified",400
 
 @app.route('/product-detail/', methods = ["GET"])
 def getAllProductDetail():
-    return jsonify(ChiTietSanPhams.query.all())
+    return jsonify(ChiTietSanPhamService.getAllChiTietSanPham())
 
 @app.route('/product-detail/<int:product_id>', methods = ["get"])
 def getAllProductDetailByProductId(product_id):
-    Product = SanPhams.query.get(product_id)
-    return jsonify(Product.ChitietSanPham.all())
+    ProductDetailList = ChiTietSanPhamService.getAllChiTietSanPhamByProductId(product_id=product_id)
+    return jsonify(ProductDetailList)
 
 @app.route("/product-detail/", methods = ["POST"])
 def createProductDetail():
@@ -89,16 +88,16 @@ def createProductDetail():
         DetailProductAnhLon.save(AnhLonpath)
         AnhNhofilename= secure_filename(DetailProductAnhNho.filename)
         AnhNhopath = os.path.join(app.config['UPLOAD_FOLDER'], AnhNhofilename)
-        DetailProductAnhNho.save(AnhNhopath)      
-    newChiTietSanPham = ChiTietSanPhams(MaSanPham = DetailProductJson['MaSanPham'], RAM = DetailProductJson['RAM']
+        DetailProductAnhNho.save(AnhNhopath)
+    Detail = ChiTietSanPhamService.createChiTietSanPham(MaChiTietSanPham = DetailProductJson['MaChiTietSanPham'],MaSanPham = DetailProductJson['MaSanPham'], RAM = DetailProductJson['RAM']
                                         , ROM = DetailProductJson['ROM'], AnhTo = AnhLonfilename, AnhNho = AnhNhofilename
-                                        ,Mau = DetailProductJson['Mau'], Gia = DetailProductJson['Gia'],SoLuong = DetailProductJson['SoLuong'])  
-    db.session.add(newChiTietSanPham)
-    db.session.commit()    
+                                        ,Mau = DetailProductJson['Mau'], Gia = DetailProductJson['Gia'],SoLuong = DetailProductJson['SoLuong'])
+    if Detail is None:
+        return "Create Detail Product Fail",500
     return "Create Detail Product Success", 201
+
 @app.route("/product-detail/<int:product_detail_id")
 def updateProductDetailByProductDetailId(product_detail_id):
-    ProductDetail = ChiTietSanPhams.query.filter_by(MaChiTietSanPham = product_detail_id).first_or_404()
     DetailProductJson = request.get_json()
     Action = DetailProductJson['action']
     if Action == "Update":
@@ -113,18 +112,16 @@ def updateProductDetailByProductDetailId(product_detail_id):
             AnhNhofilename= secure_filename(DetailProductAnhNho.filename)
             AnhNhopath = os.path.join(app.config['UPLOAD_FOLDER'], AnhNhofilename)
             DetailProductAnhNho.save(AnhNhopath)
-        ProductDetail.RAM = DetailProductJson['RAM']
-        ProductDetail.ROM = DetailProductJson['ROM']
-        ProductDetail.AnhTo = AnhLonfilename
-        ProductDetail.AnhNho = AnhNhofilename
-        ProductDetail.Mau = DetailProductJson['Mau']
-        ProductDetail.Gia = DetailProductJson['Gia']
-        ProductDetail.SoLuong = DetailProductJson['SoLuong']            
-        db.session.commit()        
+        Detail = ChiTietSanPhamService.updateChiTietSanPham(MaChiTietSanPham=product_detail_id,
+                                                   RAM=DetailProductJson['RAM'],ROM=DetailProductJson['ROM'],
+                                                   AnhTo=AnhLonfilename,AnhNho=AnhNhofilename,
+                                                   Mau=DetailProductJson['Mau'],Gia=DetailProductJson['Gia'],
+                                                   SoLuong=DetailProductJson['SoLuong'])
+        if Detail is None:
+            return "Update product detail fail",500
         return "Update product detail Success", 200
     elif Action == "Delete":
-        db.session.delete(ProductDetail)
-        db.session.commit()
+        ChiTietSanPhamService.deleteChiTietSanPham(MaChiTietSanPham=product_detail_id)
         return "Delete product detail Success",200
     return "No action specified",400
 
