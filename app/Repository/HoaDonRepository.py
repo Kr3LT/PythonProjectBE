@@ -10,3 +10,7 @@ def XacNhanHoaDon(maHoaDon):
     hoaDon.NgayThanhToan = date.today()
     # HoaDons.update().where(HoaDons.MaHoaDon == maHoaDon).values(NgayThanhToan = date.today())
     db.session.commit()
+
+
+def GetById(maHoaDon):
+    return HoaDons.query.filter(HoaDons.MaHoaDon == maHoaDon).first()
