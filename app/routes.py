@@ -142,17 +142,17 @@ def updateProductDetailByProductDetailId(product_detail_id):
     return "No action specified", 400
 
 
-@app.route("purchase-history/<int:ma-khach-hang>", method=["GET"])
+@app.route("purchase-history/<int:maKhachHang>", method=["GET"])
 def GetHoaDonByMaKhachHang(maKhachHang):
     return jsonify(HoaDonService.GetHoaDonByMaKhachHang(maKhachHang))
 
 
-@app.route("detail-purchase-history/<int:ma-hoa-don>", method=["GET"])
+@app.route("detail-purchase-history/<int:maHoaDon>", method=["GET"])
 def GetByMaHoaDon(maHoaDon):
     return jsonify(ChiTietHoaDonService.GetByMaHoaDon(maHoaDon))
 
 
-@app.route("confirm-payment/<int:ma-hoa-don>", method=["PUT"])
+@app.route("confirm-payment/<int:maHoaDon>", method=["PUT"])
 def XacNhanHoaDon(maHoaDon):
     HoaDonService.XacNhanHoaDon(maHoaDon)
     return jsonify(ChiTietHoaDonService.GetByMaHoaDon(maHoaDon))
