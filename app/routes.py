@@ -141,15 +141,102 @@ def updateProductDetailByProductDetailId(product_detail_id):
         return "Delete product detail Success", 200
     return "No action specified", 400
 
+# ===================================================================================================== #
+# Hóa đơn:
 
 @app.route("purchase-history/<int:maKhachHang>", method=["GET"])
+@login_required
 def GetHoaDonByMaKhachHang(maKhachHang):
     return jsonify(HoaDonService.GetHoaDonByMaKhachHang(maKhachHang))
 
 
+@app.route("xac-nhan/<int:maHoaDon>", method=["PUT"])
+@login_required
+def XacNhanHoaDon(maHoaDon):
+    return jsonify(HoaDonService.XacNhanHoaDon(maHoaDon))
+
+
+@app.route("get-by-id/<int:maHoaDon>", method=["GET"])
+@login_required
+def GetHoaDonById(maHoaDon):
+    return jsonify(HoaDonService.GetById(maHoaDon))
+
+
+@app.route("create-hoa-don", method=["POST"])
+@login_required
+def CreateHoaDon():
+    HoaDonJson = request.get_json()
+    HoaDon = HoaDonService.Create(MaKhachHang = HoaDonJson['MaKhachHang'],
+                                    DiaChiNhanHang = HoaDonJson['DiaChiNhanHang'],
+                                    HinhThucThanhToan = HoaDonJson['HinhThucThanhToan'])
+    if HoaDon is None:
+        return 'Create Hoa Don Fail',500
+    return "Create Hoa Don Success", 201
+
+
+@app.route("update-hoa-don", method=["PUT"])
+@login_required
+def UpdateHoaDon():
+    HoaDonJson = request.get_json()
+    HoaDon = HoaDonService.Update(MaKhachHang = HoaDonJson['MaKhachHang'],
+                                    DiaChiNhanHang = HoaDonJson['DiaChiNhanHang'],
+                                    HinhThucThanhToan = HoaDonJson['HinhThucThanhToan'])
+    if HoaDon is None:
+        return 'Create Hoa Don Fail',500
+    return "Create Hoa Don Success", 201
+
+
+@app.route("delete-hoa-don/<int: maHoaDon>", method=["DELETE"])
+@login_required
+def Delete(maHoaDon):
+    HoaDonService.Delete(maHoaDon)
+
+# ===================================================================================================== #
+# Chi tiết hóa đơn:
+
 @app.route("detail-purchase-history/<int:maHoaDon>", method=["GET"])
+@login_required
 def GetByMaHoaDon(maHoaDon):
     return jsonify(ChiTietHoaDonService.GetByMaHoaDon(maHoaDon))
+
+
+@app.route("create-chi-tiet-hoa-don", method=["POST"])
+@login_required
+def CreateChiTietHoaDon():
+    ChiTietHoaDonJson = request.get_json()
+    ChiTietHoaDon = ChiTietHoaDonService.Create(MaHoaDon = ChiTietHoaDonJson['MaHoaDon'],
+                                                MaSanPham = ChiTietHoaDonJson['MaSanPham'],
+                                                SoLuong = ChiTietHoaDonJson['ChiTietHoaDonJson'],
+                                                DonGia = ChiTietHoaDonJson['ChiTietHoaDonJson'])
+    if ChiTietHoaDon is None:
+        return 'Create Chi Tiet Hoa Don Fail',500
+    return "Create Chi Tiet Hoa Don Success", 201
+
+
+@app.route("update-chi-tiet-hoa-don", method=["PUT"])
+@login_required
+def UpdateChiTietHoaDon():
+    ChiTietHoaDonJson = request.get_json()
+    ChiTietHoaDon = ChiTietHoaDonService.Update(MaChiTietHoaDon = ChiTietHoaDonJson['MaChiTietHoaDon'],
+                                                MaHoaDon = ChiTietHoaDonJson['MaHoaDon'],
+                                                MaSanPham = ChiTietHoaDonJson['MaSanPham'],
+                                                SoLuong = ChiTietHoaDonJson['ChiTietHoaDonJson'],
+                                                DonGia = ChiTietHoaDonJson['ChiTietHoaDonJson'])
+    if ChiTietHoaDon is None:
+        return 'Create Chi Tiet Hoa Don Fail',500
+    return "Create Chi Tiet Hoa Don Success", 201
+
+
+@app.route("delete-chi-tiet-hoa-don/<int: maChiTietHoaDon>", method=["DELETE"])
+@login_required
+def DeleteChiTietHoaDon(maChiTietHoaDon):
+    ChiTietHoaDonService.Delete(maChiTietHoaDon)
+
+
+@app.route("tong-tien-da-mua/<int: maChiTietHoaDon>", method=["GET"])
+@login_required
+def TongTien():
+    return jsonify(ChiTietHoaDonService.TongTien())
 
 # ===================================================================================================== #
 # Loại sản phẩm:
