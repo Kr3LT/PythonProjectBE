@@ -1,6 +1,8 @@
 from app.models import SanPhams
 from app import db
 
+def getSanPhambyLoaispId(category_id):
+	return SanPhams.query.filter_by(MaLoaiSanPham=id).first_or_404()
 
 def createSanPham(MaSanPham, TenSanPham, Thumbnail, MaLoaiSanPham):
     newSanpham = SanPhams(MaSanPham=MaSanPham, TenSanPham=TenSanPham
