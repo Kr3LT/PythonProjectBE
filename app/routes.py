@@ -9,6 +9,9 @@ from app.models import SanPhams,  ChiTietSanPhams
 from app.Service import SanPhamService, ChiTietSanPhamService, KhachHangService, LoaiSanPhamService, ChiTietHoaDonService, HoaDonService
 
 
+
+
+
 def allowed_file(filename):
     return '.' in filename and filename.rsplit('.', 1)[1].lower() in app.config['ALLOWED_EXTENSIONS']
 
@@ -140,6 +143,13 @@ def updateProductDetailByProductDetailId(product_detail_id):
         ChiTietSanPhamService.deleteChiTietSanPham(MaChiTietSanPham=product_detail_id)
         return "Delete product detail Success", 200
     return "No action specified", 400
+
+
+@app.route('/category/<int:category_id>', methods= ['GET'])
+def getProductByCategoryId(category_id):
+    Product = SanPhamService.getSanPhambyLoaiId(MaLoaiSanPham=category_id)
+    return Product
+
 
 # ===================================================================================================== #
 # Hóa đơn:
