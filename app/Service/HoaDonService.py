@@ -1,5 +1,10 @@
 from app.Repository import HoaDonRepository
 
+def HienThiHoaDonChuaThanhToan():
+    return HoaDonRepository.HienThiHoaDonChuaThanhToan()
+
+def HienThiHoaDonDaThanhToan():
+    return HoaDonRepository.HienThiHoaDonDaThanhToan()
 
 def GetHoaDonByMaKhachHang(maKhachHang):
     return HoaDonRepository.GetHoaDonByMaKhachHang(maKhachHang)

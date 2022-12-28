@@ -153,6 +153,16 @@ def getProductByCategoryId(category_id):
 
 # ===================================================================================================== #
 # Hóa đơn:
+@app.route("get-hoadonchuathanhtoan", method=["POST"])
+def getHoanDonChuaThanhToan():
+    hoaDons = HoaDonService.HienThiHoaDonChuaThanhToan()
+    return hoaDons
+
+@app.route("get-hoadondathanhtoan", method=["POST"])
+def getHoaDonDaThanhToan():
+    hoaDons = HoaDonService.HienThiHoaDonDaThanhToan()
+    return hoaDons
+
 
 @app.route("purchase-history/<int:maKhachHang>", method=["GET"])
 @login_required
