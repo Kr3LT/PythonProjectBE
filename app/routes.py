@@ -156,12 +156,12 @@ def getProductByCategoryId(category_id):
 @app.route("get-hoadonchuathanhtoan", method=["POST"])
 def getHoanDonChuaThanhToan():
     hoaDons = HoaDonService.HienThiHoaDonChuaThanhToan()
-    return hoaDons
+    return jsonify(hoaDons)
 
 @app.route("get-hoadondathanhtoan", method=["POST"])
 def getHoaDonDaThanhToan():
     hoaDons = HoaDonService.HienThiHoaDonDaThanhToan()
-    return hoaDons
+    return jsonify(hoaDons)
 
 
 @app.route("purchase-history/<int:maKhachHang>", method=["GET"])
