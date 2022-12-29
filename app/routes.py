@@ -20,6 +20,8 @@ def allowed_file(filename):
 def serve_image(filename):
     return send_from_directory(app.config['UPLOAD_FOLDER'], filename)
 
+# ===================================================================================================== #
+# Sản phẩm:
 
 @app.route('/product', methods=['POST'])
 @login_required
@@ -50,6 +52,11 @@ def getProductByProductId(product_id):
     Product = SanPhamService.getSanPhamById(product_id=product_id)
     return jsonify(Product)
 
+@app.route('/product/<TenSanPham>/', methods=['GET'])
+def getProductByProductName(TenSanPham):
+    Product = SanPhamService.getSanPhamByName(TenSanPham)
+    return jsonify(Product)
+
 
 @app.route('/product/<int:product_id>', methods=['POST'])
 @login_required
@@ -75,6 +82,8 @@ def updateProductByProductId(product_id):
         return "Delete product Success", 200
     return "No action specified", 400
 
+# ===================================================================================================== #
+# Chi tiết sản phẩm:
 
 @app.route('/product-detail/', methods=["GET"])
 def getAllProductDetail():
@@ -114,7 +123,7 @@ def createProductDetail():
     return "Create Detail Product Success", 201
 
 
-@app.route("/product-detail/<int:product_detail_id")
+@app.route("/product-detail/<int:product_detail_id>")
 def updateProductDetailByProductDetailId(product_detail_id):
     DetailProductJson = request.get_json()
     Action = DetailProductJson['action']
@@ -154,25 +163,25 @@ def getProductByCategoryId(category_id):
 # ===================================================================================================== #
 # Hóa đơn:
 
-@app.route("purchase-history/<int:maKhachHang>", method=["GET"])
+@app.route("/purchase-history/<int:maKhachHang>", methods=["GET"])
 @login_required
 def GetHoaDonByMaKhachHang(maKhachHang):
     return jsonify(HoaDonService.GetHoaDonByMaKhachHang(maKhachHang))
 
 
-@app.route("xac-nhan/<int:maHoaDon>", method=["PUT"])
+@app.route("/xac-nhan/<int:maHoaDon>", methods=["PUT"])
 @login_required
 def XacNhanHoaDon(maHoaDon):
     return jsonify(HoaDonService.XacNhanHoaDon(maHoaDon))
 
 
-@app.route("get-by-id/<int:maHoaDon>", method=["GET"])
+@app.route("/get-by-id/<int:maHoaDon>", methods=["GET"])
 @login_required
 def GetHoaDonById(maHoaDon):
     return jsonify(HoaDonService.GetById(maHoaDon))
 
 
-@app.route("create-hoa-don", method=["POST"])
+@app.route("/create-hoa-don", methods=["POST"])
 @login_required
 def CreateHoaDon():
     HoaDonJson = request.get_json()
@@ -184,7 +193,7 @@ def CreateHoaDon():
     return "Create Hoa Don Success", 201
 
 
-@app.route("update-hoa-don", method=["PUT"])
+@app.route("/update-hoa-don", methods=["PUT"])
 @login_required
 def UpdateHoaDon():
     HoaDonJson = request.get_json()
@@ -196,21 +205,26 @@ def UpdateHoaDon():
     return "Create Hoa Don Success", 201
 
 
-@app.route("delete-hoa-don/<int: maHoaDon>", method=["DELETE"])
+@app.route("/delete-hoa-don/<int:maHoaDon>", methods=["DELETE"])
 @login_required
 def Delete(maHoaDon):
     HoaDonService.Delete(maHoaDon)
 
+@app.route("/confirm-payment/<int:maHoaDon>", methods=["PUT"])
+def ConfirmPayment(maHoaDon):
+    HoaDonService.XacNhanHoaDon(maHoaDon)
+    return jsonify(ChiTietHoaDonService.GetByMaHoaDon(maHoaDon))
+
 # ===================================================================================================== #
 # Chi tiết hóa đơn:
 
-@app.route("detail-purchase-history/<int:maHoaDon>", method=["GET"])
+@app.route("/detail-purchase-history/<int:maHoaDon>", methods=["GET"])
 @login_required
 def GetByMaHoaDon(maHoaDon):
     return jsonify(ChiTietHoaDonService.GetByMaHoaDon(maHoaDon))
 
 
-@app.route("create-chi-tiet-hoa-don", method=["POST"])
+@app.route("/create-chi-tiet-hoa-don", methods=["POST"])
 @login_required
 def CreateChiTietHoaDon():
     ChiTietHoaDonJson = request.get_json()
@@ -223,7 +237,7 @@ def CreateChiTietHoaDon():
     return "Create Chi Tiet Hoa Don Success", 201
 
 
-@app.route("update-chi-tiet-hoa-don", method=["PUT"])
+@app.route("/update-chi-tiet-hoa-don", methods=["PUT"])
 @login_required
 def UpdateChiTietHoaDon():
     ChiTietHoaDonJson = request.get_json()
@@ -237,13 +251,13 @@ def UpdateChiTietHoaDon():
     return "Create Chi Tiet Hoa Don Success", 201
 
 
-@app.route("delete-chi-tiet-hoa-don/<int: maChiTietHoaDon>", method=["DELETE"])
+@app.route("/delete-chi-tiet-hoa-don/<int:maChiTietHoaDon>", methods=["DELETE"])
 @login_required
 def DeleteChiTietHoaDon(maChiTietHoaDon):
     ChiTietHoaDonService.Delete(maChiTietHoaDon)
 
 
-@app.route("tong-tien-da-mua/<int: maChiTietHoaDon>", method=["GET"])
+@app.route("/tong-tien-da-mua/<int:maChiTietHoaDon>", methods=["GET"])
 @login_required
 def TongTien():
     return jsonify(ChiTietHoaDonService.TongTien())
@@ -253,6 +267,11 @@ def TongTien():
 @app.route('/category', methods=["GET"])
 def getAllCategory():
     CategoryList = LoaiSanPhamService.getAllLoaiSanPham()
+    return jsonify(CategoryList)
+
+@app.route('/category/<int:MaLoaiSanPham>', methods=["GET"])
+def getCategoryById(MaLoaiSanPham):
+    CategoryList = LoaiSanPhamService.getLoaiSanPhamById(MaLoaiSanPham)
     return jsonify(CategoryList)
 
 @app.route('/category', methods = ['POST'])
@@ -311,7 +330,3 @@ def updateCustomerByCustomerId(MaKhachHang):
         LoaiSanPhamService.deleteLoaiSanPham(MaKhachHang = MaKhachHang)
         return "Delete Customer Success",200
     return "No action specified",400
-@app.route("confirm-payment/<int:ma-hoa-don>", method=["PUT"])
-def XacNhanHoaDon(maHoaDon):
-    HoaDonService.XacNhanHoaDon(maHoaDon)
-    return jsonify(ChiTietHoaDonService.GetByMaHoaDon(maHoaDon))

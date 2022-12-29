@@ -3,8 +3,11 @@ from app.Repository import SanPhamRepository
 def getAllSanPham():
     return SanPhamRepository.getAllSanPham()
 
-def getSanPhambyLoaispId(MaLoaiSanPham)
+def getSanPhambyLoaispId(MaLoaiSanPham):
 	return SanPhamRepository.getSanPhambyLoaiId(MaLoaiSanPham=MaLoaiSanPham)
+
+def getSanPhamByName(TenSanPham):
+    return SanPhamRepository.getSanPhamByName(TenSanPham)
 
 def getSanPhamById(product_id):
     return SanPhamRepository.getSanPhamById(product_id = product_id)

@@ -5,6 +5,9 @@ def createLoaiSanPham(MaLoaiSanPham, TenLoaiSanPham):
 
 def getAllLoaiSanPham():
     return LoaiSanPhamRepository.getAllLoaiSanPham()
+
+def getLoaiSanPhamById(MaLoaiSanPham):
+    return LoaiSanPhamRepository.getLoaiSanPhamById(MaLoaiSanPham)
     
 def updateLoaiSanPham(MaLoaiSanPham, TenLoaiSanPham):
     return LoaiSanPhamRepository.updateLoaiSanPham(MaLoaiSanPham, TenLoaiSanPham)

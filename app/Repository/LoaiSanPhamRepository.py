@@ -11,6 +11,9 @@ def createLoaiSanPham(MaLoaiSanPham, TenLoaiSanPham):
 def getAllLoaiSanPham():
     return LoaiSanPhams.query.all()
 
+def getLoaiSanPhamById(MaLoaiSanPham):
+    return LoaiSanPhams.query.filter_by(MaLoaiSanPham = MaLoaiSanPham).first_or_404()
+
 def updateLoaiSanPham(MaLoaiSanPham, TenLoaiSanPham):
     LoaiSanPham = LoaiSanPhams.query.filter_by(MaLoaiSanPham=MaLoaiSanPham).first_or_404()
     LoaiSanPham.TenLoaiSanPham = TenLoaiSanPham

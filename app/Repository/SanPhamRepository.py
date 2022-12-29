@@ -15,6 +15,8 @@ def createSanPham(MaSanPham, TenSanPham, Thumbnail, MaLoaiSanPham):
 def getAllSanPham():
     return SanPhams.query.all()
 
+def getSanPhamByName(TenSanPham):
+    return SanPhams.query.filter(SanPhams.TenSanPham.like('%'+TenSanPham+'%')).first_or_404()
 
 def getSanPhamById(product_id):
     return SanPhams.query.filter_by(MaSanPham=id).first_or_404()
