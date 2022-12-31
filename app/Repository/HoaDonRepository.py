@@ -13,6 +13,12 @@ def XacNhanHoaDon(maHoaDon):
     db.session.commit()
     return hoaDon
 
+def HienThiHoaDonChuaThanhToan():
+    hoadons = HoaDons.query.filter(HoaDons.NgayThanhToan==None).all()
+    return hoadons
+def HienThiHoaDonDaThanhToan():
+    hoadons = HoaDons.query.filter(HoaDons.NgayThanhToan!= None).all()
+    return hoadons
 
 def GetById(maHoaDon):
     return HoaDons.query.filter(HoaDons.MaHoaDon == maHoaDon).first()
