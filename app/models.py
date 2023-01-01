@@ -1,7 +1,16 @@
 from app import db, login
 from flask_login import UserMixin
+import datetime
+import json
+from json import JSONEncoder
 from werkzeug.security import generate_password_hash, check_password_hash
 
+
+class DateTimeEncoder(JSONEncoder):
+        #Override the default method
+        def default(self, obj):
+            if isinstance(obj, (datetime.date, datetime.datetime)):
+                return obj.isoformat()
 
 class LoaiSanPhams(db.Model):
     __tablename__ = 'LoaiSanPhams'
@@ -84,7 +93,7 @@ class HoaDons(db.Model):
                 "maKhachHang": self.MaKhachHang,
                 "diaChiNhanHang": self.DiaChiNhanHang,
                 "hinhThucThanhToan": self.HinhThucThanhToan,
-                "ngayThanhToan": self.NgayThanhToan}
+                "ngayThanhToan": json.dumps(self.NgayThanhToan, indent=4, cls=DateTimeEncoder)}
 
 
 @login.user_loader
