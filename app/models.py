@@ -1,5 +1,5 @@
-from app import db
-import json
+from app import db, login
+from flask_login import UserMixin
 from werkzeug.security import generate_password_hash, check_password_hash
 
 
@@ -87,7 +87,11 @@ class HoaDons(db.Model):
                 "ngayThanhToan": self.NgayThanhToan}
 
 
-class KhachHangs(db.Model):
+@login.user_loader
+def load_user(id):
+    return KhachHangs.query.get(int(id))
+
+class KhachHangs(UserMixin,db.Model):
     __tablename__ = 'KhachHangs'
     MaKhachHang = db.Column(db.Integer, primary_key=True)
     TenKhachHang = db.Column(db.String(128))
@@ -95,6 +99,9 @@ class KhachHangs(db.Model):
     DiaChi = db.Column(db.String(128))
     Username = db.Column(db.String(128))
     Password = db.Column(db.String(128))
+    
+    def get_id(self):
+        return self.MaKhachHang
 
     def serialize(self):
         return {"maKhachHang": self.MaKhachHang,
