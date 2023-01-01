@@ -252,7 +252,10 @@ def Delete(maHoaDon):
 @app.route("/confirm-payment/<int:maHoaDon>", methods=["PUT"])
 def ConfirmPayment(maHoaDon):
     HoaDonService.XacNhanHoaDon(maHoaDon)
-    return jsonify(ChiTietHoaDonService.GetByMaHoaDon(maHoaDon).serialize())
+    list = []
+    for chiTiet in ChiTietHoaDonService.GetByMaHoaDon(maHoaDon):
+        list.append(chiTiet.serialize())
+    return json.dumps(list, indent=4)
 
 # ===================================================================================================== #
 # Chi tiết hóa đơn:
