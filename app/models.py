@@ -93,9 +93,13 @@ class KhachHangs(db.Model):
     TenKhachHang = db.Column(db.String(128))
     SoDienThoai = db.Column(db.String(128))
     DiaChi = db.Column(db.String(128))
+    Username = db.Column(db.String(128))
+    Password = db.Column(db.String(128))
 
     def serialize(self):
         return {"maKhachHang": self.MaKhachHang,
                 "tenKhachHang": self.TenKhachHang,
                 "soDienThoai": self.SoDienThoai,
-                "diaChi": self.DiaChi}
+                "diaChi": self.DiaChi,
+                "username": self.Username,
+                "password": self.Password}
