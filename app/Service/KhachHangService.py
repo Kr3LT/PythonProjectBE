@@ -11,3 +11,6 @@ def updateKhachHang(MaKhachHang, TenKhachHang, SoDienThoai, DiaChi):
 
 def deleteKhachHang(MaKhachHang):
     return KhachHangRepository.deleteKhachHang(MaKhachHang)
+
+def checkLoginKhachHang(username, password):
+    return KhachHangRepository.checkLoginKhachHang(username=username, password=password)

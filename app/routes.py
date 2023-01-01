@@ -379,3 +379,22 @@ def updateCustomerByCustomerId(MaKhachHang):
         LoaiSanPhamService.deleteLoaiSanPham(MaKhachHang = MaKhachHang)
         return "Delete Customer Success",200
     return "No action specified",400
+
+@app.route('/login', methods = ['POST'])
+def customerLogin():
+    loginInfo = request.get_json()
+    username = loginInfo['username']
+    password = loginInfo['password']
+    KhachHang = KhachHangService.checkLoginKhachHang(username=username, password=password)
+    if KhachHang is None:
+        return "Wrong Username/Password", 200
+    login_user(KhachHang)
+    return jsonify(KhachHang.serialize())
+
+@app.route('/logout', methods = ['GET'])
+def customerLogout():
+    logout_user()
+    return "User Logged Out", 200
+    
+    
+
