@@ -27,16 +27,17 @@ def serve_image(filename):
 @app.route('/product', methods=['POST'])
 @login_required
 def createProduct():
-    ProductJson = request.get_json()
-    ProductThumbnail = request.file['thumbnail']
-    if ProductThumbnail.filename == '':
-        flash('No Thumbnail uploaded')
-    if ProductThumbnail and allowed_file(ProductThumbnail.filename):
+    ProductForm = request.form    
+    ProductThumbnail = request.files['thumbnail']
+    
+    if ProductThumbnail.filename is None:
+        flash('No Thumbnail uploaded')        
+    elif ProductThumbnail and allowed_file(ProductThumbnail.filename):
         filename = secure_filename(ProductThumbnail.filename)
         path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
-        ProductThumbnail.save(path)
-    Product = SanPhamService.createSanPham(MaSanPham=ProductJson['MaSanPham'], TenSanPham=ProductJson['TenSanPham']
-                                           , Thumbnail=filename, MaLoaiSanPham=ProductJson['MaLoaiSanPham'])
+        ProductThumbnail.save(path)    
+    Product = SanPhamService.createSanPham(MaSanPham=ProductForm['MaSanPham'], TenSanPham=ProductForm['TenSanPham']
+                                           , Thumbnail=ProductThumbnail.filename, MaLoaiSanPham=ProductForm['MaLoaiSanPham'])
     if Product is None:
         return "Create Product Fail", 500
     return "Create Product Success", 201
@@ -71,19 +72,19 @@ def getProductByProductName(TenSanPham):
 @app.route('/product/<int:product_id>', methods=['POST'])
 @login_required
 def updateProductByProductId(product_id):
-    ProductJson = request.get_json()
-    Action = ProductJson['action']
+    ProductForm = request.form
+    Action = ProductForm['action']
     if Action == "Update":
-        ProductThumbnail = request.file['thumbnail']
+        ProductThumbnail = request.files['thumbnail']
         if ProductThumbnail.filename == '':
             flash('No Thumbnail uploaded')
         if ProductThumbnail and allowed_file(ProductThumbnail.filename):
             filename = secure_filename(ProductThumbnail.filename)
             path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
             ProductThumbnail.save(path)
-        Product = SanPhamService.updateSanPham(MaSanPham=product_id, TenSanPham=ProductJson['TenSanPham'],
+        Product = SanPhamService.updateSanPham(MaSanPham=product_id, TenSanPham=ProductForm['TenSanPham'],
                                                Thumbnail=ProductThumbnail.filename,
-                                               MaLoaiSanPham=ProductJson['MaLoaiSanPham'])
+                                               MaLoaiSanPham=ProductForm['MaLoaiSanPham'])
         if Product is None:
             return "Update product fails", 500
         return "Update product Success", 200
@@ -114,9 +115,9 @@ def getAllProductDetailByProductId(product_id):
 
 @app.route("/product-detail/", methods=["POST"])
 def createProductDetail():
-    DetailProductJson = request.get_json()
-    DetailProductAnhLon = request.file['anhLon']
-    DetailProductAnhNho = request.file['anhNho']
+    DetailProductForm = request.form
+    DetailProductAnhLon = request.files['anhLon']
+    DetailProductAnhNho = request.files['anhNho']
     if DetailProductAnhLon.filename == '' or DetailProductAnhNho.filename == '':
         flash('No Thumbnail uploaded')
     if DetailProductAnhLon and allowed_file(DetailProductAnhLon.filename) and DetailProductAnhNho and allowed_file(
@@ -127,13 +128,13 @@ def createProductDetail():
         AnhNhofilename = secure_filename(DetailProductAnhNho.filename)
         AnhNhopath = os.path.join(app.config['UPLOAD_FOLDER'], AnhNhofilename)
         DetailProductAnhNho.save(AnhNhopath)
-    Detail = ChiTietSanPhamService.createChiTietSanPham(MaChiTietSanPham=DetailProductJson['MaChiTietSanPham'],
-                                                        MaSanPham=DetailProductJson['MaSanPham'],
-                                                        RAM=DetailProductJson['RAM']
-                                                        , ROM=DetailProductJson['ROM'], AnhTo=AnhLonfilename,
+    Detail = ChiTietSanPhamService.createChiTietSanPham(MaChiTietSanPham=DetailProductForm['MaChiTietSanPham'],
+                                                        MaSanPham=DetailProductForm['MaSanPham'],
+                                                        RAM=DetailProductForm['RAM']
+                                                        , ROM=DetailProductForm['ROM'], AnhTo=AnhLonfilename,
                                                         AnhNho=AnhNhofilename
-                                                        , Mau=DetailProductJson['Mau'], Gia=DetailProductJson['Gia'],
-                                                        SoLuong=DetailProductJson['SoLuong'])
+                                                        , Mau=DetailProductForm['Mau'], Gia=DetailProductForm['Gia'],
+                                                        SoLuong=DetailProductForm['SoLuong'])
     if Detail is None:
         return "Create Detail Product Fail", 500
     return "Create Detail Product Success", 201
@@ -141,11 +142,11 @@ def createProductDetail():
 
 @app.route("/product-detail/<int:product_detail_id>")
 def updateProductDetailByProductDetailId(product_detail_id):
-    DetailProductJson = request.get_json()
-    Action = DetailProductJson['action']
+    DetailProductForm = request.form
+    Action = DetailProductForm['action']
     if Action == "Update":
-        DetailProductAnhLon = request.file['anhLon']
-        DetailProductAnhNho = request.file['anhNho']
+        DetailProductAnhLon = request.files['anhLon']
+        DetailProductAnhNho = request.files['anhNho']
         if DetailProductAnhLon.filename == '' or DetailProductAnhNho.filename == '':
             flash('No Thumbnail uploaded')
         if DetailProductAnhLon and allowed_file(DetailProductAnhLon.filename) and DetailProductAnhNho and allowed_file(
@@ -157,10 +158,10 @@ def updateProductDetailByProductDetailId(product_detail_id):
             AnhNhopath = os.path.join(app.config['UPLOAD_FOLDER'], AnhNhofilename)
             DetailProductAnhNho.save(AnhNhopath)
         Detail = ChiTietSanPhamService.updateChiTietSanPham(MaChiTietSanPham=product_detail_id,
-                                                            RAM=DetailProductJson['RAM'], ROM=DetailProductJson['ROM'],
+                                                            RAM=DetailProductForm['RAM'], ROM=DetailProductForm['ROM'],
                                                             AnhTo=AnhLonfilename, AnhNho=AnhNhofilename,
-                                                            Mau=DetailProductJson['Mau'], Gia=DetailProductJson['Gia'],
-                                                            SoLuong=DetailProductJson['SoLuong'])
+                                                            Mau=DetailProductForm['Mau'], Gia=DetailProductForm['Gia'],
+                                                            SoLuong=DetailProductForm['SoLuong'])
         if Detail is None:
             return "Update product detail fail", 500
         return "Update product detail Success", 200
@@ -234,7 +235,7 @@ def CreateHoaDon():
 @app.route("/update-hoa-don", methods=["PUT"])
 @login_required
 def UpdateHoaDon():
-    HoaDonJson = request.get_json()
+    HoaDonJson = request.form
     HoaDon = HoaDonService.Update(MaKhachHang = HoaDonJson['MaKhachHang'],
                                     DiaChiNhanHang = HoaDonJson['DiaChiNhanHang'],
                                     HinhThucThanhToan = HoaDonJson['HinhThucThanhToan'])
