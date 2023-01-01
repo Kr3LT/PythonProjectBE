@@ -60,8 +60,8 @@ class ChiTietSanPhams(db.Model):
                 "anhTo": self.AnhTo,
                 "anhNho": self.AnhNho,
                 "mau": self.Mau,
-                "gia": self.AnhTo,
-                "soLuong": self.SoLuong}
+                "gia": self.Gia,
+                "soLuong": self.SoLuong}    
 
 
 class ChiTietHoaDons(db.Model):
