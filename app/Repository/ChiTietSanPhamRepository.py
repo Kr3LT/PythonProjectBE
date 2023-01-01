@@ -1,4 +1,4 @@
-from app.models import ChiTietSanPhams, SanPhams
+from app.models import ChiTietSanPhams
 from app import db
 
 def getAllChiTietSanPham():
@@ -6,7 +6,7 @@ def getAllChiTietSanPham():
 
 
 def getAllChiTietSanPhamByProductId(product_id):
-    return SanPhams.query.get(product_id)
+    return ChiTietSanPhams.query.filter_by(MaSanPham = product_id).all()
 
 
 def createChiTietSanPham(MaChiTietSanPham,MaSanPham, RAM, ROM, AnhTo, AnhNho
