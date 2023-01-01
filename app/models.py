@@ -1,4 +1,5 @@
 from app import db
+import json
 from werkzeug.security import generate_password_hash, check_password_hash
 
 
@@ -7,14 +8,27 @@ class LoaiSanPhams(db.Model):
     MaLoaiSanPham = db.Column(db.Integer, primary_key=True)
     TenLoaiSanPham = db.Column(db.String(128))
 
+    def serialize(self):
+        return {
+            "maLoaiSanPham": self.MaLoaiSanPham,
+            "tenLoaiSanPham": self.TenLoaiSanPham
+        }
+
 
 class SanPhams(db.Model):
     __tablename__ = 'SanPhams'
     MaSanPham = db.Column(db.Integer, primary_key=True)
     TenSanPham = db.Column(db.String(128))
     Thumbnail = db.Column(db.String(128))
-    MaLoaiSanPham = db.Column(db.Integer, db.ForeignKey('LoaiSanPhams.MaLoaiSanPham', ondelete = "CASCADE"))
-    ChitietSanPham = db.relationship("ChiTietSanPhams",backref='chitiet', lazy='dynamic')
+    MaLoaiSanPham = db.Column(db.Integer, db.ForeignKey('LoaiSanPhams.MaLoaiSanPham', ondelete="CASCADE"))
+    ChitietSanPham = db.relationship("ChiTietSanPhams", backref='chitiet', lazy='dynamic')
+
+    def serialize(self):
+        return {"maSanPham": self.MaSanPham,
+                "tenSanPham": self.TenSanPham,
+                "thumbnail": self.Thumbnail,
+                "maLoaiSanPham": self.MaLoaiSanPham,
+                "chitietSanPham": self.ChitietSanPham}
 
 
 class ChiTietSanPhams(db.Model):
@@ -29,6 +43,17 @@ class ChiTietSanPhams(db.Model):
     Gia = db.Column(db.Float)
     SoLuong = db.Column(db.Integer)
 
+    def serialize(self):
+        return {"maChiTietSanPham": self.MaChiTietSanPham,
+                "maSanPham": self.MaSanPham,
+                "ram": self.RAM,
+                "rom": self.ROM,
+                "anhTo": self.AnhTo,
+                "anhNho": self.AnhNho,
+                "mau": self.Mau,
+                "gia": self.AnhTo,
+                "soLuong": self.SoLuong}
+
 
 class ChiTietHoaDons(db.Model):
     __tablename__ = 'ChiTietHoaDons'
@@ -38,6 +63,13 @@ class ChiTietHoaDons(db.Model):
     SoLuong = db.Column(db.Integer)
     DonGia = db.Column(db.Float)
 
+    def serialize(self):
+        return {"maChiTietHoaDon": self.MaChiTietSanPham,
+                "maHoaDon": self.MaHoaDon,
+                "maChiTietSanPham": self.MaChiTietSanPham,
+                "soLuong": self.SoLuong,
+                "donGia": self.DonGia}
+
 
 class HoaDons(db.Model):
     __tablename__ = 'HoaDons'
@@ -45,7 +77,14 @@ class HoaDons(db.Model):
     MaKhachHang = db.Column(db.Integer, db.ForeignKey('KhachHangs.MaKhachHang'))
     DiaChiNhanHang = db.Column(db.String(128))
     HinhThucThanhToan = db.Column(db.String(128))
-    NgayThanhToan = db.Column(db.Date) #khong chac lam co kieu db.Date ko nha, hoac la dung DateTime
+    NgayThanhToan = db.Column(db.Date)  # khong chac lam co kieu db.Date ko nha, hoac la dung DateTime
+
+    def serialize(self):
+        return {"maHoaDon": self.MaHoaDon,
+                "maKhachHang": self.MaKhachHang,
+                "diaChiNhanHang": self.DiaChiNhanHang,
+                "hinhThucThanhToan": self.HinhThucThanhToan,
+                "ngayThanhToan": self.NgayThanhToan}
 
 
 class KhachHangs(db.Model):
@@ -54,3 +93,9 @@ class KhachHangs(db.Model):
     TenKhachHang = db.Column(db.String(128))
     SoDienThoai = db.Column(db.String(128))
     DiaChi = db.Column(db.String(128))
+
+    def serialize(self):
+        return {"maKhachHang": self.MaKhachHang,
+                "tenKhachHang": self.TenKhachHang,
+                "soDienThoai": self.SoDienThoai,
+                "diaChi": self.DiaChi}

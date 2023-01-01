@@ -7,6 +7,7 @@ from werkzeug.urls import url_parse
 from werkzeug.utils import secure_filename
 from app.models import SanPhams,  ChiTietSanPhams
 from app.Service import SanPhamService, ChiTietSanPhamService, KhachHangService, LoaiSanPhamService, ChiTietHoaDonService, HoaDonService
+import json
 
 
 
@@ -44,7 +45,16 @@ def createProduct():
 @app.route('/product', methods=["GET"])
 def getAllProduct():
     ProductList = SanPhamService.getAllSanPham()
-    return jsonify(ProductList)
+    return jsonify(ProductList) # Lỗi Object of type Product is not JSON serializable
+
+    # Lỗi: Object of type AppenderQuery is not JSON serializable
+    # return jsonify(ProductList[0].serialize())
+
+    # Lỗi: Object of type AppenderQuery is not JSON serializable
+    # list = []
+    # for product in ProductList:
+    #     list.append(product.serialize())
+    # return json.dumps(list, indent=4)
 
 
 @app.route('/product/<int:product_id>/', methods=['GET'])
@@ -162,12 +172,12 @@ def getProductByCategoryId(category_id):
 
 # ===================================================================================================== #
 # Hóa đơn:
-@app.route("get-hoadonchuathanhtoan", method=["POST"])
+@app.route("/get-hoadonchuathanhtoan", methods=["POST"])
 def getHoanDonChuaThanhToan():
     hoaDons = HoaDonService.HienThiHoaDonChuaThanhToan()
     return jsonify(hoaDons)
 
-@app.route("get-hoadondathanhtoan", method=["POST"])
+@app.route("/get-hoadondathanhtoan", methods=["POST"])
 def getHoaDonDaThanhToan():
     hoaDons = HoaDonService.HienThiHoaDonDaThanhToan()
     return jsonify(hoaDons)
