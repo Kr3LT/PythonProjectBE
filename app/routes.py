@@ -45,27 +45,27 @@ def createProduct():
 @app.route('/product', methods=["GET"])
 def getAllProduct():
     ProductList = SanPhamService.getAllSanPham()
-    return jsonify(ProductList) # Lỗi Object of type Product is not JSON serializable
+    # return jsonify(ProductList) # Lỗi Object of type Product is not JSON serializable
 
     # Lỗi: Object of type AppenderQuery is not JSON serializable
-    # return jsonify(ProductList[0].serialize())
+    #return jsonify(ProductList[0].serialize())
 
-    # Lỗi: Object of type AppenderQuery is not JSON serializable
-    # list = []
-    # for product in ProductList:
-    #     list.append(product.serialize())
-    # return json.dumps(list, indent=4)
+    #Lỗi: Object of type AppenderQuery is not JSON serializable
+    list = []
+    for product in ProductList:
+        list.append(product.serialize())
+    return json.dumps(list, indent=4)
 
 
 @app.route('/product/<int:product_id>/', methods=['GET'])
 def getProductByProductId(product_id):
     Product = SanPhamService.getSanPhamById(product_id=product_id)
-    return jsonify(Product)
+    return jsonify(Product.serialize())
 
 @app.route('/product/<TenSanPham>/', methods=['GET'])
 def getProductByProductName(TenSanPham):
     Product = SanPhamService.getSanPhamByName(TenSanPham)
-    return jsonify(Product)
+    return jsonify(Product.serialize())
 
 
 @app.route('/product/<int:product_id>', methods=['POST'])
@@ -97,13 +97,19 @@ def updateProductByProductId(product_id):
 
 @app.route('/product-detail/', methods=["GET"])
 def getAllProductDetail():
-    return jsonify(ChiTietSanPhamService.getAllChiTietSanPham())
+    list = []
+    for product in ChiTietSanPhamService.getAllChiTietSanPham():
+        list.append(product.serialize())
+    return json.dumps(list, indent=4)        
 
 
 @app.route('/product-detail/<int:product_id>', methods=["get"])
 def getAllProductDetailByProductId(product_id):
     ProductDetailList = ChiTietSanPhamService.getAllChiTietSanPhamByProductId(product_id=product_id)
-    return jsonify(ProductDetailList)
+    list = []
+    for product in ProductDetailList:
+        list.append(product.serialize())
+    return json.dumps(list, indent=4)
 
 
 @app.route("/product-detail/", methods=["POST"])
@@ -167,7 +173,10 @@ def updateProductDetailByProductDetailId(product_detail_id):
 @app.route('/category/<int:category_id>', methods= ['GET'])
 def getProductByCategoryId(category_id):
     Product = SanPhamService.getSanPhambyLoaiId(MaLoaiSanPham=category_id)
-    return Product
+    list = []
+    for product in Product:
+        list.append(product.serialize())
+    return json.dumps(list, indent=4)    
 
 
 # ===================================================================================================== #
@@ -175,30 +184,39 @@ def getProductByCategoryId(category_id):
 @app.route("/get-hoadonchuathanhtoan", methods=["POST"])
 def getHoanDonChuaThanhToan():
     hoaDons = HoaDonService.HienThiHoaDonChuaThanhToan()
-    return jsonify(hoaDons)
+    list = []
+    for product in hoaDons:
+        list.append(product.serialize())
+    return json.dumps(list, indent=4)    
 
 @app.route("/get-hoadondathanhtoan", methods=["POST"])
 def getHoaDonDaThanhToan():
     hoaDons = HoaDonService.HienThiHoaDonDaThanhToan()
-    return jsonify(hoaDons)
+    list = []
+    for product in hoaDons:
+        list.append(product.serialize())
+    return json.dumps(list, indent=4) 
 
 
 @app.route("/purchase-history/<int:maKhachHang>", methods=["GET"])
 @login_required
 def GetHoaDonByMaKhachHang(maKhachHang):
-    return jsonify(HoaDonService.GetHoaDonByMaKhachHang(maKhachHang))
+    list = []
+    for product in HoaDonService.GetHoaDonByMaKhachHang(maKhachHang):
+        list.append(product.serialize())
+    return json.dumps(list, indent=4)     
 
 
 @app.route("/xac-nhan/<int:maHoaDon>", methods=["PUT"])
 @login_required
 def XacNhanHoaDon(maHoaDon):
-    return jsonify(HoaDonService.XacNhanHoaDon(maHoaDon))
+    return jsonify(HoaDonService.XacNhanHoaDon(maHoaDon).serialize())
 
 
 @app.route("/get-by-id/<int:maHoaDon>", methods=["GET"])
 @login_required
 def GetHoaDonById(maHoaDon):
-    return jsonify(HoaDonService.GetById(maHoaDon))
+    return jsonify(HoaDonService.GetById(maHoaDon).serialize())
 
 
 @app.route("/create-hoa-don", methods=["POST"])
@@ -233,7 +251,7 @@ def Delete(maHoaDon):
 @app.route("/confirm-payment/<int:maHoaDon>", methods=["PUT"])
 def ConfirmPayment(maHoaDon):
     HoaDonService.XacNhanHoaDon(maHoaDon)
-    return jsonify(ChiTietHoaDonService.GetByMaHoaDon(maHoaDon))
+    return jsonify(ChiTietHoaDonService.GetByMaHoaDon(maHoaDon).serialize())
 
 # ===================================================================================================== #
 # Chi tiết hóa đơn:
@@ -241,7 +259,10 @@ def ConfirmPayment(maHoaDon):
 @app.route("/detail-purchase-history/<int:maHoaDon>", methods=["GET"])
 @login_required
 def GetByMaHoaDon(maHoaDon):
-    return jsonify(ChiTietHoaDonService.GetByMaHoaDon(maHoaDon))
+    list = []
+    for product in ChiTietHoaDonService.GetByMaHoaDon(maHoaDon):
+        list.append(product.serialize())
+    return json.dumps(list, indent=4)     
 
 
 @app.route("/create-chi-tiet-hoa-don", methods=["POST"])
@@ -277,7 +298,7 @@ def DeleteChiTietHoaDon(maChiTietHoaDon):
     ChiTietHoaDonService.Delete(maChiTietHoaDon)
 
 
-@app.route("/tong-tien-da-mua/<int:maChiTietHoaDon>", methods=["GET"])
+@app.route("/tong-tien-da-mua", methods=["GET"])
 @login_required
 def TongTien():
     return jsonify(ChiTietHoaDonService.TongTien())
@@ -287,12 +308,16 @@ def TongTien():
 @app.route('/category', methods=["GET"])
 def getAllCategory():
     CategoryList = LoaiSanPhamService.getAllLoaiSanPham()
-    return jsonify(CategoryList)
+    list = []
+    for item in CategoryList:
+        list.append(item.serialize())
+    return json.dumps(list, indent=4)
+    
 
 @app.route('/category/<int:MaLoaiSanPham>', methods=["GET"])
 def getCategoryById(MaLoaiSanPham):
-    CategoryList = LoaiSanPhamService.getLoaiSanPhamById(MaLoaiSanPham)
-    return jsonify(CategoryList)
+    Category = LoaiSanPhamService.getLoaiSanPhamById(MaLoaiSanPham)
+    return jsonify(Category.serialize())
 
 @app.route('/category', methods = ['POST'])
 @login_required
@@ -324,7 +349,11 @@ def updateCategoryByCategoryId(MaLoaiSanPham):
 @app.route('/customer', methods=["GET"])
 def getAllCustomer():
     CustomerList = KhachHangService.getAllKhachHang()
-    return jsonify(CustomerList)
+    list = []
+    for item in CustomerList:
+        list.append(item.serialize())
+    return json.dumps(list, indent=4)
+    
 
 @app.route('/customer', methods = ['POST'])
 def createCustomer():

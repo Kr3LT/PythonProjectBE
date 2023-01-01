@@ -28,7 +28,7 @@ class SanPhams(db.Model):
                 "tenSanPham": self.TenSanPham,
                 "thumbnail": self.Thumbnail,
                 "maLoaiSanPham": self.MaLoaiSanPham,
-                "chitietSanPham": self.ChitietSanPham}
+                }
 
 
 class ChiTietSanPhams(db.Model):
