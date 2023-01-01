@@ -171,7 +171,7 @@ def updateProductDetailByProductDetailId(product_detail_id):
     return "No action specified", 400
 
 
-@app.route('/category/<int:category_id>', methods= ['GET'])
+@app.route('/product/category/<int:category_id>', methods= ['GET'])
 def getProductByCategoryId(category_id):
     Product = SanPhamService.getSanPhambyLoaiId(MaLoaiSanPham=category_id)
     list = []
@@ -182,7 +182,7 @@ def getProductByCategoryId(category_id):
 
 # ===================================================================================================== #
 # Hóa đơn:
-@app.route("/get-hoadonchuathanhtoan", methods=["POST"])
+@app.route("/get-hoadonchuathanhtoan", methods=["GET"])
 def getHoanDonChuaThanhToan():
     hoaDons = HoaDonService.HienThiHoaDonChuaThanhToan()
     list = []
@@ -190,7 +190,7 @@ def getHoanDonChuaThanhToan():
         list.append(product.serialize())
     return json.dumps(list, indent=4)    
 
-@app.route("/get-hoadondathanhtoan", methods=["POST"])
+@app.route("/get-hoadondathanhtoan", methods=["GET"])
 def getHoaDonDaThanhToan():
     hoaDons = HoaDonService.HienThiHoaDonDaThanhToan()
     list = []
