@@ -2,7 +2,7 @@ import os
 from app import app, db
 from flask import redirect, render_template, flash, url_for
 from flask_login import login_user, current_user, logout_user, login_required
-from flask import request, jsonify, send_from_directory
+from flask import request, jsonify, send_from_directory, send_file
 from werkzeug.urls import url_parse
 from werkzeug.utils import secure_filename
 from app.models import SanPhams,  ChiTietSanPhams
@@ -17,9 +17,9 @@ def allowed_file(filename):
     return '.' in filename and filename.rsplit('.', 1)[1].lower() in app.config['ALLOWED_EXTENSIONS']
 
 
-@app.route('/images/<path:filename>')
-def serve_image(filename):
-    return send_from_directory(app.config['UPLOAD_FOLDER'], filename)
+@app.route('/img/<path:filename>')
+def serve_image(filename):          
+    return send_from_directory(app.config["UPLOAD_FOLDER"], filename)
 
 # ===================================================================================================== #
 # Sản phẩm:
