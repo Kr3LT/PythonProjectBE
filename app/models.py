@@ -110,3 +110,13 @@ class KhachHangs(UserMixin,db.Model):
                 "diaChi": self.DiaChi,
                 "username": self.Username,
                 "password": self.Password}
+        
+class Admin(UserMixin, db.Model):
+    __tablename__ = 'admin'
+    id = db.Column(db.Integer, primary_key = True)
+    Username = db.Column(db.String(128))
+    Password = db.Column(db.String(128))
+    def serialize(self):
+        return {"username": self.Username,
+                "password": self.Password}
+    
