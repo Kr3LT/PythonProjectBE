@@ -112,6 +112,28 @@ def getAllProductDetailByProductId(product_id):
     return json.dumps(list, indent=4)
 
 
+@app.route('/product-Price/', methods=["GET"])
+def getAllChiTietSanPhamByPrice():
+    DetailProductJson = request.get_json()
+    ProductDetailList = ChiTietSanPhamService.getAllChiTietSanPhamByPrice(min=DetailProductJson['min'],
+                                                                        max=DetailProductJson['max'])
+    list = []
+    for product in ProductDetailList:
+        list.append(product.serialize())
+    return json.dumps(list, indent=4)
+
+@app.route("/product-configuration/", methods=["GET"])
+def getAllChiTietSanPhamByConfiguration():
+    DetailProductJson = request.get_json()
+    ProductDetailList = ChiTietSanPhamService.getAllChiTietSanPhamByByConfiguration(RAM=DetailProductJson['RAM'],
+                                                                                    ROM=DetailProductJson['ROM'],
+                                                                                    Mau=DetailProductJson['Mau'])
+    list = []
+    for product in ProductDetailList:
+        list.append(product.serialize())
+    return json.dumps(list, indent=4)
+    
+
 @app.route("/product-detail/", methods=["POST"])
 def createProductDetail():
     DetailProductJson = request.get_json()
