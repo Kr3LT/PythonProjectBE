@@ -11,9 +11,7 @@ def getAllChiTietSanPhamByPrice(min,max):
     return ChiTietSanPhams.query.filter(ChiTietSanPhams.Gia.between(min,max)).all()
 
 def getAllChiTietSanPhamByConfiguration(RAM,ROM,Mau):
-    return ChiTietSanPhams.query.filter(ChiTietSanPhams.RAM.like('%'+RAM+'%')
-                                        or ChiTietSanPhams.ROM.like('%'+ROM+'%')
-                                        or ChiTietSanPhams.Mau.like('%'+Mau+'%')).all()
+    return ChiTietSanPhams.query.filter(ChiTietSanPhams.RAM.like('%'+RAM+'%')  & ChiTietSanPhams.ROM.like('%'+ROM+'%') & ChiTietSanPhams.Mau.like('%'+Mau+'%')).all()
 
 def createChiTietSanPham(MaChiTietSanPham,MaSanPham, RAM, ROM, AnhTo, AnhNho
                         , Mau, Gia, SoLuong):
