@@ -73,25 +73,25 @@ def getProductByProductName(TenSanPham):
 @login_required
 def updateProductByProductId(product_id):
     ProductForm = request.form
-    Action = ProductForm['action']
-    if Action == "Update":
-        ProductThumbnail = request.files['thumbnail']
-        if ProductThumbnail.filename == '':
-            flash('No Thumbnail uploaded')
-        if ProductThumbnail and allowed_file(ProductThumbnail.filename):
-            filename = secure_filename(ProductThumbnail.filename)
-            path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
-            ProductThumbnail.save(path)
-        Product = SanPhamService.updateSanPham(MaSanPham=product_id, TenSanPham=ProductForm['TenSanPham'],
+    ProductThumbnail = request.files['thumbnail']
+    if ProductThumbnail.filename == '':
+        flash('No Thumbnail uploaded')
+    if ProductThumbnail and allowed_file(ProductThumbnail.filename):
+        filename = secure_filename(ProductThumbnail.filename)
+        path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
+        ProductThumbnail.save(path)
+    Product = SanPhamService.updateSanPham(MaSanPham=product_id, TenSanPham=ProductForm['TenSanPham'],
                                                Thumbnail=ProductThumbnail.filename,
                                                MaLoaiSanPham=ProductForm['MaLoaiSanPham'])
-        if Product is None:
-            return "Update product fails", 500
-        return "Update product Success", 200
-    elif Action == "Delete":
-        SanPhamService.deleteSanPham(MaSanPham=product_id)
-        return "Delete product Success", 200
-    return "No action specified", 400
+    if Product is None:
+        return "Update product fails", 500
+    return "Update product Success", 200
+
+@app.route('/product/<int:product_id>', methods=['POST'])
+@login_required
+def deleteProductByProductId(product_id):
+    SanPhamService.deleteSanPham(MaSanPham=product_id)
+    return "Delete product Success", 200
 
 # ===================================================================================================== #
 # Chi tiết sản phẩm:
@@ -113,7 +113,7 @@ def getAllProductDetailByProductId(product_id):
     return json.dumps(list, indent=4)
 
 
-@app.route('/product-Price/', methods=["GET"])
+@app.route('/product-detail-price/', methods=["GET"])
 def getAllChiTietSanPhamByPrice():
     DetailProductJson = request.get_json()
     ProductDetailList = ChiTietSanPhamService.getAllChiTietSanPhamByPrice(min=DetailProductJson['min'],
@@ -123,7 +123,7 @@ def getAllChiTietSanPhamByPrice():
         list.append(product.serialize())
     return json.dumps(list, indent=4)
 
-@app.route("/product-configuration/", methods=["GET"])
+@app.route("/product-detail-configuration/", methods=["GET"])
 def getAllChiTietSanPhamByConfiguration():
     DetailProductJson = request.get_json()
     ProductDetailList = ChiTietSanPhamService.getAllChiTietSanPhamByByConfiguration(RAM=DetailProductJson['RAM'],
@@ -140,6 +140,8 @@ def createProductDetail():
     DetailProductForm = request.form
     DetailProductAnhLon = request.files['anhLon']
     DetailProductAnhNho = request.files['anhNho']
+    AnhLonfilename = secure_filename(DetailProductAnhLon.filename)
+    AnhNhofilename = secure_filename(DetailProductAnhNho.filename)
     if DetailProductAnhLon.filename == '' or DetailProductAnhNho.filename == '':
         flash('No Thumbnail uploaded')
     if DetailProductAnhLon and allowed_file(DetailProductAnhLon.filename) and DetailProductAnhNho and allowed_file(
@@ -162,35 +164,38 @@ def createProductDetail():
     return "Create Detail Product Success", 201
 
 
-@app.route("/product-detail/<int:product_detail_id>")
+@app.route("/product-detail/<int:product_detail_id>", methods = ["POST"])
 def updateProductDetailByProductDetailId(product_detail_id):
     DetailProductForm = request.form
-    Action = DetailProductForm['action']
-    if Action == "Update":
-        DetailProductAnhLon = request.files['anhLon']
-        DetailProductAnhNho = request.files['anhNho']
-        if DetailProductAnhLon.filename == '' or DetailProductAnhNho.filename == '':
-            flash('No Thumbnail uploaded')
-        if DetailProductAnhLon and allowed_file(DetailProductAnhLon.filename) and DetailProductAnhNho and allowed_file(
-                DetailProductAnhNho.filename):
-            AnhLonfilename = secure_filename(DetailProductAnhLon.filename)
-            AnhLonpath = os.path.join(app.config['UPLOAD_FOLDER'], AnhLonfilename)
-            DetailProductAnhLon.save(AnhLonpath)
-            AnhNhofilename = secure_filename(DetailProductAnhNho.filename)
-            AnhNhopath = os.path.join(app.config['UPLOAD_FOLDER'], AnhNhofilename)
-            DetailProductAnhNho.save(AnhNhopath)
-        Detail = ChiTietSanPhamService.updateChiTietSanPham(MaChiTietSanPham=product_detail_id,
+    Action = DetailProductForm['action']    
+    DetailProductAnhLon = request.files['anhLon']
+    DetailProductAnhNho = request.files['anhNho']
+    AnhLonfilename = secure_filename(DetailProductAnhLon.filename)
+    AnhNhofilename = secure_filename(DetailProductAnhNho.filename)        
+    if DetailProductAnhLon.filename == '' or DetailProductAnhNho.filename == '':
+        flash('No Thumbnail uploaded')
+    if DetailProductAnhLon and allowed_file(DetailProductAnhLon.filename) and DetailProductAnhNho and allowed_file(
+            DetailProductAnhNho.filename):
+        AnhLonfilename = secure_filename(DetailProductAnhLon.filename)
+        AnhLonpath = os.path.join(app.config['UPLOAD_FOLDER'], AnhLonfilename)
+        DetailProductAnhLon.save(AnhLonpath)
+        AnhNhofilename = secure_filename(DetailProductAnhNho.filename)
+        AnhNhopath = os.path.join(app.config['UPLOAD_FOLDER'], AnhNhofilename)
+        DetailProductAnhNho.save(AnhNhopath)
+    Detail = ChiTietSanPhamService.updateChiTietSanPham(MaChiTietSanPham=product_detail_id,
                                                             RAM=DetailProductForm['RAM'], ROM=DetailProductForm['ROM'],
                                                             AnhTo=AnhLonfilename, AnhNho=AnhNhofilename,
                                                             Mau=DetailProductForm['Mau'], Gia=DetailProductForm['Gia'],
                                                             SoLuong=DetailProductForm['SoLuong'])
-        if Detail is None:
-            return "Update product detail fail", 500
-        return "Update product detail Success", 200
-    elif Action == "Delete":
-        ChiTietSanPhamService.deleteChiTietSanPham(MaChiTietSanPham=product_detail_id)
-        return "Delete product detail Success", 200
-    return "No action specified", 400
+    if Detail is None:
+        return "Update product detail fail", 500
+    return "Update product detail Success", 200
+
+
+@app.route("/product-detail/<int:product_detail_id>", methods = ["DELETE"])
+def deleteProductDetailByProductDetailId(product_detail_id):
+    ChiTietSanPhamService.deleteChiTietSanPham(MaChiTietSanPham=product_detail_id)
+    return "Delete product detail Success", 200 
 
 
 @app.route('/product/category/<int:category_id>', methods= ['GET'])
@@ -246,9 +251,10 @@ def GetHoaDonById(maHoaDon):
 @login_required
 def CreateHoaDon():
     HoaDonJson = request.get_json()
-    HoaDon = HoaDonService.Create(MaKhachHang = HoaDonJson['MaKhachHang'],
-                                    DiaChiNhanHang = HoaDonJson['DiaChiNhanHang'],
-                                    HinhThucThanhToan = HoaDonJson['HinhThucThanhToan'])
+    HoaDon = HoaDonService.Create(maKhachHang = HoaDonJson['MaKhachHang'],
+                                    diaChiNhanHang = HoaDonJson['DiaChiNhanHang'],
+                                    hinhThucThanhToan = HoaDonJson['HinhThucThanhToan'], 
+                                    ngayThanhToan = HoaDonJson['NgayThanhToan'])
     if HoaDon is None:
         return 'Create Hoa Don Fail',500
     return "Create Hoa Don Success", 201
@@ -257,19 +263,22 @@ def CreateHoaDon():
 @app.route("/update-hoa-don", methods=["PUT"])
 @login_required
 def UpdateHoaDon():
-    HoaDonJson = request.form
-    HoaDon = HoaDonService.Update(MaKhachHang = HoaDonJson['MaKhachHang'],
-                                    DiaChiNhanHang = HoaDonJson['DiaChiNhanHang'],
-                                    HinhThucThanhToan = HoaDonJson['HinhThucThanhToan'])
+    HoaDonJson = request.get_json()
+    HoaDon = HoaDonService.Update(maHoaDon= HoaDonJson['MaHoaDon'],
+                                    maKhachHang = HoaDonJson['MaKhachHang'],
+                                    diaChiNhanHang = HoaDonJson['DiaChiNhanHang'],
+                                    hinhThucThanhToan = HoaDonJson['HinhThucThanhToan'],    
+                                    ngayThanhToan=HoaDonJson['NgayThanhToan'])
     if HoaDon is None:
-        return 'Create Hoa Don Fail',500
-    return "Create Hoa Don Success", 201
+        return 'Update Hoa Don Fail',500
+    return "Update Hoa Don Success", 201
 
 
 @app.route("/delete-hoa-don/<int:maHoaDon>", methods=["DELETE"])
 @login_required
 def Delete(maHoaDon):
-    HoaDonService.Delete(maHoaDon)
+    return HoaDonService.Delete(maHoaDon)
+    
 
 @app.route("/confirm-payment/<int:maHoaDon>", methods=["PUT"])
 def ConfirmPayment(maHoaDon):
@@ -278,6 +287,11 @@ def ConfirmPayment(maHoaDon):
     for chiTiet in ChiTietHoaDonService.GetByMaHoaDon(maHoaDon):
         list.append(chiTiet.serialize())
     return json.dumps(list, indent=4)
+
+@app.route("/tong-tien/<int:maKhachHang>", methods=["GET"])
+@login_required
+def TongTienDaMua(maKhachHang):
+    return jsonify(HoaDonService.TongTienDaMua(maKhachHang = maKhachHang))
 
 # ===================================================================================================== #
 # Chi tiết hóa đơn:
@@ -295,10 +309,10 @@ def GetByMaHoaDon(maHoaDon):
 @login_required
 def CreateChiTietHoaDon():
     ChiTietHoaDonJson = request.get_json()
-    ChiTietHoaDon = ChiTietHoaDonService.Create(MaHoaDon = ChiTietHoaDonJson['MaHoaDon'],
-                                                MaSanPham = ChiTietHoaDonJson['MaSanPham'],
-                                                SoLuong = ChiTietHoaDonJson['ChiTietHoaDonJson'],
-                                                DonGia = ChiTietHoaDonJson['ChiTietHoaDonJson'])
+    ChiTietHoaDon = ChiTietHoaDonService.Create(maHoaDon = ChiTietHoaDonJson['MaHoaDon'],
+                                                maChiTietSanPham = ChiTietHoaDonJson['MaChiTietSanPham'],
+                                                soLuong = ChiTietHoaDonJson['SoLuong'],
+                                                donGia = ChiTietHoaDonJson['DonGia'])
     if ChiTietHoaDon is None:
         return 'Create Chi Tiet Hoa Don Fail',500
     return "Create Chi Tiet Hoa Don Success", 201
@@ -308,26 +322,26 @@ def CreateChiTietHoaDon():
 @login_required
 def UpdateChiTietHoaDon():
     ChiTietHoaDonJson = request.get_json()
-    ChiTietHoaDon = ChiTietHoaDonService.Update(MaChiTietHoaDon = ChiTietHoaDonJson['MaChiTietHoaDon'],
-                                                MaHoaDon = ChiTietHoaDonJson['MaHoaDon'],
-                                                MaSanPham = ChiTietHoaDonJson['MaSanPham'],
-                                                SoLuong = ChiTietHoaDonJson['ChiTietHoaDonJson'],
-                                                DonGia = ChiTietHoaDonJson['ChiTietHoaDonJson'])
+    ChiTietHoaDon = ChiTietHoaDonService.Update(maChiTietHoaDon = ChiTietHoaDonJson['MaChiTietHoaDon'],
+                                                maHoaDon = ChiTietHoaDonJson['MaHoaDon'],
+                                                maChiTietSanPham = ChiTietHoaDonJson['MaChiTietSanPham'],
+                                                soLuong = ChiTietHoaDonJson['SoLuong'],
+                                                donGia = ChiTietHoaDonJson['DonGia'])
     if ChiTietHoaDon is None:
-        return 'Create Chi Tiet Hoa Don Fail',500
-    return "Create Chi Tiet Hoa Don Success", 201
+        return 'Update Chi Tiet Hoa Don Fail',500
+    return "Update Chi Tiet Hoa Don Success", 201
 
 
 @app.route("/delete-chi-tiet-hoa-don/<int:maChiTietHoaDon>", methods=["DELETE"])
 @login_required
 def DeleteChiTietHoaDon(maChiTietHoaDon):
-    ChiTietHoaDonService.Delete(maChiTietHoaDon)
+    return ChiTietHoaDonService.Delete(maChiTietHoaDon)
 
 
-@app.route("/tong-tien-da-mua", methods=["GET"])
+@app.route("/tong-tien-hoa-don/<int:maHoaDon>", methods=["GET"])
 @login_required
-def TongTien():
-    return jsonify(ChiTietHoaDonService.TongTien())
+def TongTienHoaDon(maHoaDon):
+    return jsonify(ChiTietHoaDonService.TongTien(maHoaDon = maHoaDon))
 
 # ===================================================================================================== #
 # Loại sản phẩm:
@@ -359,16 +373,17 @@ def createCategory():
 @login_required
 def updateCategoryByCategoryId(MaLoaiSanPham):
     CategoryJson = request.get_json()
-    Action = CategoryJson['action']
-    if Action == "Update":
-        Category = LoaiSanPhamService.updateLoaiSanPham(MaLoaiSanPham = MaLoaiSanPham, TenLoaiSanPham = CategoryJson['TenLoaiSanPham'])
-        if Category is None:
-            return "Update Category detail fail",500
-        return "Update Category Success", 200
-    elif Action == "Delete":
-        LoaiSanPhamService.deleteLoaiSanPham(MaLoaiSanPham = MaLoaiSanPham)
-        return "Delete Category Success",200
-    return "No action specified",400
+    Category = LoaiSanPhamService.updateLoaiSanPham(MaLoaiSanPham = MaLoaiSanPham, TenLoaiSanPham = CategoryJson['TenLoaiSanPham'])
+    if Category is None:
+        return "Update Category detail fail",500
+    return "Update Category Success", 200
+
+
+@app.route('/category/<int:MaLoaiSanPham>', methods = ['DELETE'])
+@login_required
+def deleteCategoryByCategoryId(MaLoaiSanPham):
+    LoaiSanPhamService.deleteLoaiSanPham(MaLoaiSanPham = MaLoaiSanPham)
+    return "Delete Category Success",200
 
 # ===================================================================================================== #
 # Khách hàng:
@@ -385,7 +400,9 @@ def getAllCustomer():
 def createCustomer():
     CustomerJson = request.get_json()
     Customer = KhachHangService.createKhachHang(MaKhachHang = CustomerJson['MaKhachHang'], TenKhachHang = CustomerJson['TenKhachHang'],
-                              SoDienThoai = CustomerJson['SoDienThoai'], DiaChi = CustomerJson['DiaChi'])   
+                              SoDienThoai = CustomerJson['SoDienThoai'], DiaChi = CustomerJson['DiaChi'],
+                              UserName=CustomerJson['Username'], Password=CustomerJson['Password']
+                              )   
     if Customer is None:
         return "Create Customer Fail",500
     return "Create Customer Success", 201
@@ -394,17 +411,18 @@ def createCustomer():
 @login_required
 def updateCustomerByCustomerId(MaKhachHang):
     CustomerJson = request.get_json()
-    Action = CustomerJson['action']
-    if Action == "Update":
-        Customer = KhachHangService.updateKhachHang(MaKhachHang = MaKhachHang, TenKhachHang = CustomerJson['TenKhachHang'],
-                              SoDienThoai = CustomerJson['SoDienThoai'], DiaChi = CustomerJson['DiaChi'])
-        if Customer is None:
-            return "Update Customer detail fail",500
-        return "Update Customer Success", 200
-    elif Action == "Delete":
-        LoaiSanPhamService.deleteLoaiSanPham(MaKhachHang = MaKhachHang)
-        return "Delete Customer Success",200
-    return "No action specified",400
+    
+    Customer = KhachHangService.updateKhachHang(MaKhachHang = MaKhachHang, TenKhachHang = CustomerJson['TenKhachHang'],
+                              SoDienThoai = CustomerJson['SoDienThoai'], DiaChi = CustomerJson['DiaChi'], Password=CustomerJson['Password'])
+    if Customer is None:
+        return "Update Customer detail fail",500
+    return "Update Customer Success", 200
+    
+@app.route('/customer/<int:MaKhachHang>', methods = ['DELETE'])
+def deleteCustomerByCustomerId(MaKhachHang):
+    KhachHangService.deleteKhachHang(MaKhachHang = MaKhachHang)
+    return "Delete Customer Success",200
+
 
 @app.route('/login', methods = ['POST'])
 def customerLogin():

@@ -6,17 +6,17 @@ def GetByMaHoaDon(maHoaDon):
     return ChiTietHoaDons.query.filter(ChiTietHoaDons.MaHoaDon == maHoaDon).all()
 
 
-def Create(maHoaDon, maSanPham, soLuong, donGia):
-    chiTietHoaDon = ChiTietHoaDons(MaHoaDon = maHoaDon, MaSanPham = maSanPham, SoLuong = soLuong, DonGia = donGia)
+def Create(maHoaDon, maChiTietSanPham, soLuong, donGia):
+    chiTietHoaDon = ChiTietHoaDons(MaHoaDon = maHoaDon, MaChiTietSanPham = maChiTietSanPham, SoLuong = soLuong, DonGia = donGia)
     db.session.add(chiTietHoaDon)
     db.session.commit()
     return chiTietHoaDon
 
 
-def Update(maChiTietHoaDon, maHoaDon, maSanPham, soLuong, donGia):
+def Update(maChiTietHoaDon, maHoaDon, maChiTietSanPham, soLuong, donGia):
     chiTietHoaDon = ChiTietHoaDons.query.filter(ChiTietHoaDons.MaChiTietHoaDon == maChiTietHoaDon).first()
     chiTietHoaDon.MaHoaDon = maHoaDon
-    chiTietHoaDon.MaSanPham = maSanPham
+    chiTietHoaDon.MaChiTietSanPham = maChiTietSanPham
     chiTietHoaDon.SoLuong = soLuong
     chiTietHoaDon.DonGia = donGia
     db.session.commit()
@@ -27,10 +27,11 @@ def Delete(maChiTietHoaDon):
     chiTietHoaDon = ChiTietHoaDons.query.filter(ChiTietHoaDons.MaChiTietHoaDon == maChiTietHoaDon).first()
     db.session.delete(chiTietHoaDon)
     db.session.commit()
+    return "Deleted"
 
 
-def TongTien():
-    chiTiets = ChiTietHoaDons.query.all()
+def TongTien(maHoaDon):
+    chiTiets = ChiTietHoaDons.query.filter(ChiTietHoaDons.MaHoaDon == maHoaDon).all()
     s = 0
     for chiTiet in chiTiets:
         s = s + chiTiet.SoLuong * chiTiet.DonGia

@@ -73,7 +73,7 @@ class ChiTietHoaDons(db.Model):
     DonGia = db.Column(db.Float)
 
     def serialize(self):
-        return {"maChiTietHoaDon": self.MaChiTietSanPham,
+        return {"maChiTietHoaDon": self.MaChiTietHoaDon,
                 "maHoaDon": self.MaHoaDon,
                 "maChiTietSanPham": self.MaChiTietSanPham,
                 "soLuong": self.SoLuong,

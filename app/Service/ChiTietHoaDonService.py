@@ -5,17 +5,17 @@ def GetByMaHoaDon(maHoaDon):
     return ChiTietHoaDonRepository.GetByMaHoaDon(maHoaDon)
 
 
-def Create(maHoaDon, maSanPham, soLuong, donGia):
-    return ChiTietHoaDonRepository.Create(maHoaDon, maSanPham, soLuong, donGia)
+def Create(maHoaDon, maChiTietSanPham, soLuong, donGia):
+    return ChiTietHoaDonRepository.Create(maHoaDon, maChiTietSanPham, soLuong, donGia)
 
 
-def Update(maChiTietHoaDon, maHoaDon, maSanPham, soLuong, donGia):
-    return ChiTietHoaDonRepository.Update(maChiTietHoaDon, maHoaDon, maSanPham, soLuong, donGia)
+def Update(maChiTietHoaDon, maHoaDon, maChiTietSanPham, soLuong, donGia):
+    return ChiTietHoaDonRepository.Update(maChiTietHoaDon, maHoaDon, maChiTietSanPham, soLuong, donGia)
 
 
 def Delete(maChiTietHoaDon):
-    ChiTietHoaDonRepository.Delete(maChiTietHoaDon)
+    return ChiTietHoaDonRepository.Delete(maChiTietHoaDon)
 
 
-def TongTien():
-    return ChiTietHoaDonRepository.TongTien()
+def TongTien(maHoaDon):
+    return ChiTietHoaDonRepository.TongTien(maHoaDon)

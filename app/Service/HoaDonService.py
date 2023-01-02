@@ -1,4 +1,4 @@
-from app.Repository import HoaDonRepository
+from app.Repository import HoaDonRepository, ChiTietHoaDonRepository
 
 def HienThiHoaDonChuaThanhToan():
     return HoaDonRepository.HienThiHoaDonChuaThanhToan()
@@ -27,4 +27,11 @@ def Update(maHoaDon, maKhachHang, diaChiNhanHang, hinhThucThanhToan, ngayThanhTo
 
 
 def Delete(maHoaDon):
-    HoaDonRepository.Delete(maHoaDon)
+    return HoaDonRepository.Delete(maHoaDon)
+
+def TongTienDaMua(maKhachHang):
+    HoaDonList = HoaDonRepository.GetHoaDonByMaKhachHang(maKhachHang=maKhachHang)
+    TongTien = 0
+    for HoaDon in HoaDonList :
+        TongTien += ChiTietHoaDonRepository.TongTien(HoaDon.MaHoaDon)    
+    return TongTien

@@ -46,3 +46,6 @@ def Delete(maHoaDon):
     hoaDon = HoaDons.query.filter(HoaDons.MaHoaDon == maHoaDon).first()
     db.session.delete(hoaDon)
     db.session.commit()
+    return "Deleted"
+
+    

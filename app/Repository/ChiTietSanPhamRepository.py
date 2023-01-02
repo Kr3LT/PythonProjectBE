@@ -33,8 +33,10 @@ def updateChiTietSanPham(MaChiTietSanPham, RAM, ROM, AnhTo, AnhNho
     ProductDetail.SoLuong = SoLuong
     db.session.commit()
     return ProductDetail
+
 def deleteChiTietSanPham(MaChiTietSanPham):
     ProductDetail = ChiTietSanPhams.query.filter_by(MaChiTietSanPham=MaChiTietSanPham).first_or_404()
     db.session.delete(ProductDetail)
+    db.session.commit()
     return "Delete Success"
 
