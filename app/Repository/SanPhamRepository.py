@@ -4,8 +4,8 @@ from app import db
 def getSanPhambyLoaispId(category_id):
 	return SanPhams.query.filter_by(MaLoaiSanPham=id).first_or_404()
 
-def createSanPham(MaSanPham, TenSanPham, Thumbnail, MaLoaiSanPham):
-    newSanpham = SanPhams(MaSanPham=MaSanPham, TenSanPham=TenSanPham
+def createSanPham(TenSanPham, Thumbnail, MaLoaiSanPham):
+    newSanpham = SanPhams(TenSanPham=TenSanPham
                           , Thumbnail=Thumbnail, MaLoaiSanPham=MaLoaiSanPham)
     db.session.add(newSanpham)
     db.session.commit()

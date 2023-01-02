@@ -12,8 +12,8 @@ def getSanPhamByName(TenSanPham):
 def getSanPhamById(product_id):
     return SanPhamRepository.getSanPhamById(product_id = product_id)
 
-def createSanPham(MaSanPham, TenSanPham, Thumbnail, MaLoaiSanPham):
-    return SanPhamRepository.createSanPham(MaSanPham=MaSanPham, TenSanPham=TenSanPham, Thumbnail=Thumbnail, MaLoaiSanPham=MaLoaiSanPham)
+def createSanPham(TenSanPham, Thumbnail, MaLoaiSanPham):
+    return SanPhamRepository.createSanPham(TenSanPham=TenSanPham, Thumbnail=Thumbnail, MaLoaiSanPham=MaLoaiSanPham)
 
 def updateSanPham(MaSanPham, TenSanPham, Thumbnail, MaLoaiSanPham):
     return SanPhamRepository.updateSanPham(MaSanPham=MaSanPham, TenSanPham=TenSanPham, Thumbnail=Thumbnail, MaLoaiSanPham=MaLoaiSanPham)

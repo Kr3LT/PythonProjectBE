@@ -1,8 +1,8 @@
 from app.models import KhachHangs
 from app import db
 
-def createKhachHang(MaKhachHang, TenKhachHang, SoDienThoai, DiaChi, UserName, Password):
-    newKhachHang = KhachHangs(MaKhachHang= MaKhachHang, TenKhachHang= TenKhachHang, 
+def createKhachHang(TenKhachHang, SoDienThoai, DiaChi, UserName, Password):
+    newKhachHang = KhachHangs(TenKhachHang= TenKhachHang, 
                               SoDienThoai = SoDienThoai, DiaChi = DiaChi, Username = UserName, Password = Password)
     db.session.add(newKhachHang)
     db.session.commit()

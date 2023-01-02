@@ -13,9 +13,9 @@ def getAllChiTietSanPhamByPrice(min,max):
 def getAllChiTietSanPhamByConfiguration(RAM,ROM,Mau):
     return ChiTietSanPhams.query.filter(ChiTietSanPhams.RAM.like('%'+RAM+'%')  & ChiTietSanPhams.ROM.like('%'+ROM+'%') & ChiTietSanPhams.Mau.like('%'+Mau+'%')).all()
 
-def createChiTietSanPham(MaChiTietSanPham,MaSanPham, RAM, ROM, AnhTo, AnhNho
+def createChiTietSanPham(MaSanPham, RAM, ROM, AnhTo, AnhNho
                         , Mau, Gia, SoLuong):
-    newChiTietSanPham = ChiTietSanPhams(MaChiTietSanPham=MaChiTietSanPham,MaSanPham=MaSanPham, RAM=RAM
+    newChiTietSanPham = ChiTietSanPhams(MaSanPham=MaSanPham, RAM=RAM
                                         , ROM=ROM, AnhTo=AnhTo, AnhNho=AnhNho
                                         , Mau=Mau, Gia=Gia,SoLuong=SoLuong)
     db.session.add(newChiTietSanPham)

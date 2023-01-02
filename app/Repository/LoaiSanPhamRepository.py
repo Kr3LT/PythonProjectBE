@@ -2,8 +2,8 @@ from app.models import LoaiSanPhams
 from app import db
 
 
-def createLoaiSanPham(MaLoaiSanPham, TenLoaiSanPham):
-    newLoaiSanPham = LoaiSanPhams(MaLoaiSanPham= MaLoaiSanPham, TenLoaiSanPham= TenLoaiSanPham)
+def createLoaiSanPham(TenLoaiSanPham):
+    newLoaiSanPham = LoaiSanPhams(TenLoaiSanPham= TenLoaiSanPham)
     db.session.add(newLoaiSanPham)
     db.session.commit()
     return newLoaiSanPham

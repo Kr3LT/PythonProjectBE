@@ -36,7 +36,7 @@ def createProduct():
         filename = secure_filename(ProductThumbnail.filename)
         path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
         ProductThumbnail.save(path)    
-    Product = SanPhamService.createSanPham(MaSanPham=ProductForm['MaSanPham'], TenSanPham=ProductForm['TenSanPham']
+    Product = SanPhamService.createSanPham(TenSanPham=ProductForm['TenSanPham']
                                            , Thumbnail=ProductThumbnail.filename, MaLoaiSanPham=ProductForm['MaLoaiSanPham'])
     if Product is None:
         return "Create Product Fail", 500
@@ -152,8 +152,7 @@ def createProductDetail():
         AnhNhofilename = secure_filename(DetailProductAnhNho.filename)
         AnhNhopath = os.path.join(app.config['UPLOAD_FOLDER'], AnhNhofilename)
         DetailProductAnhNho.save(AnhNhopath)
-    Detail = ChiTietSanPhamService.createChiTietSanPham(MaChiTietSanPham=DetailProductForm['MaChiTietSanPham'],
-                                                        MaSanPham=DetailProductForm['MaSanPham'],
+    Detail = ChiTietSanPhamService.createChiTietSanPham(MaSanPham=DetailProductForm['MaSanPham'],
                                                         RAM=DetailProductForm['RAM']
                                                         , ROM=DetailProductForm['ROM'], AnhTo=AnhLonfilename,
                                                         AnhNho=AnhNhofilename
@@ -363,8 +362,7 @@ def getCategoryById(MaLoaiSanPham):
 @login_required
 def createCategory():
     CategoryJson = request.get_json()
-    Category = LoaiSanPhamService.createLoaiSanPham(MaLoaiSanPham= CategoryJson['MaLoaiSanPham'],
-                                                    TenLoaiSanPham= CategoryJson['TenLoaiSanPham'])
+    Category = LoaiSanPhamService.createLoaiSanPham(TenLoaiSanPham= CategoryJson['TenLoaiSanPham'])
     if Category is None:
         return "Create Category Fail",500
     return "Create Category Success", 201
@@ -399,7 +397,7 @@ def getAllCustomer():
 @app.route('/customer', methods = ['POST'])
 def createCustomer():
     CustomerJson = request.get_json()
-    Customer = KhachHangService.createKhachHang(MaKhachHang = CustomerJson['MaKhachHang'], TenKhachHang = CustomerJson['TenKhachHang'],
+    Customer = KhachHangService.createKhachHang(TenKhachHang = CustomerJson['TenKhachHang'],
                               SoDienThoai = CustomerJson['SoDienThoai'], DiaChi = CustomerJson['DiaChi'],
                               UserName=CustomerJson['Username'], Password=CustomerJson['Password']
                               )   

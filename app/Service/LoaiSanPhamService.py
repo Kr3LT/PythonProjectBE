@@ -1,7 +1,7 @@
 from app.Repository import LoaiSanPhamRepository
 
-def createLoaiSanPham(MaLoaiSanPham, TenLoaiSanPham):
-    return LoaiSanPhamRepository.createLoaiSanPham(MaLoaiSanPham, TenLoaiSanPham)
+def createLoaiSanPham(TenLoaiSanPham):
+    return LoaiSanPhamRepository.createLoaiSanPham(TenLoaiSanPham)
 
 def getAllLoaiSanPham():
     return LoaiSanPhamRepository.getAllLoaiSanPham()

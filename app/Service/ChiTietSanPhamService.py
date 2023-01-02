@@ -13,9 +13,9 @@ def getAllChiTietSanPhamByPrice(min,max):
 def getAllChiTietSanPhamByByConfiguration(RAM,ROM,Mau):
     return ChiTietSanPhamRepository.getAllChiTietSanPhamByConfiguration(RAM=RAM,ROM=ROM,Mau=Mau)
 
-def createChiTietSanPham(MaChiTietSanPham, MaSanPham, RAM, ROM, AnhTo, AnhNho
+def createChiTietSanPham(MaSanPham, RAM, ROM, AnhTo, AnhNho
                          , Mau, Gia, SoLuong):
-    return ChiTietSanPhamRepository.createChiTietSanPham(MaChiTietSanPham=MaChiTietSanPham, MaSanPham=MaSanPham,
+    return ChiTietSanPhamRepository.createChiTietSanPham(MaSanPham=MaSanPham,
                                                          RAM=RAM, ROM=ROM, AnhTo=AnhTo, AnhNho=AnhNho
                                                          , Mau=Mau, Gia=Gia, SoLuong=SoLuong)
 

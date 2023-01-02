@@ -1,7 +1,7 @@
 from app.Repository import KhachHangRepository
 
-def createKhachHang(MaKhachHang, TenKhachHang, SoDienThoai, DiaChi, UserName, Password):
-    return KhachHangRepository.createKhachHang(MaKhachHang=MaKhachHang, TenKhachHang=TenKhachHang, SoDienThoai=SoDienThoai, DiaChi=DiaChi, UserName=UserName, Password=Password)
+def createKhachHang(TenKhachHang, SoDienThoai, DiaChi, UserName, Password):
+    return KhachHangRepository.createKhachHang(TenKhachHang=TenKhachHang, SoDienThoai=SoDienThoai, DiaChi=DiaChi, UserName=UserName, Password=Password)
 
 def getAllKhachHang():
     return KhachHangRepository.getAllKhachHang()
