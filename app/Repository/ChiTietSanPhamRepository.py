@@ -4,10 +4,16 @@ from app import db
 def getAllChiTietSanPham():
     return ChiTietSanPhams.query.all()
 
-
 def getAllChiTietSanPhamByProductId(product_id):
     return ChiTietSanPhams.query.filter_by(MaSanPham = product_id).all()
 
+def getAllChiTietSanPhamByPrice(min,max):
+    return ChiTietSanPhams.query.filter(ChiTietSanPhams.Gia.between(min,max)).all()
+
+def getAllChiTietSanPhamByConfiguration(RAM,ROM,Mau):
+    return ChiTietSanPhams.query.filter(ChiTietSanPhams.RAM.like('%'+RAM+'%')
+                                        or ChiTietSanPhams.ROM.like('%'+ROM+'%')
+                                        or ChiTietSanPhams.Mau.like('%'+Mau+'%')).all()
 
 def createChiTietSanPham(MaChiTietSanPham,MaSanPham, RAM, ROM, AnhTo, AnhNho
                         , Mau, Gia, SoLuong):
