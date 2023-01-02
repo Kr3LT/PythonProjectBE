@@ -1,11 +1,11 @@
-from app.models import ChiTietSanPhams, SanPhams
+from app.models import ChiTietSanPhams
 from app import db
 
 def getAllChiTietSanPham():
     return ChiTietSanPhams.query.all()
 
 def getAllChiTietSanPhamByProductId(product_id):
-    return ChiTietSanPhams.query.get(product_id)
+    return ChiTietSanPhams.query.filter_by(MaSanPham = product_id).all()
 
 def getAllChiTietSanPhamByPrice(min,max):
     return ChiTietSanPhams.query.filter(ChiTietSanPhams.Gia.between(min,max)).all()

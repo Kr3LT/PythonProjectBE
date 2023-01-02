@@ -10,6 +10,9 @@ app = Flask(__name__)
 app.config.from_object(Config)
 CORS(app)
 
+from flask_login import LoginManager
+login = LoginManager(app)
+
 db = SQLAlchemy(app)
 migrate = Migrate(app, db)
 

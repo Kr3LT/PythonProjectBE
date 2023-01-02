@@ -1,7 +1,16 @@
-from app import db
+from app import db, login
+from flask_login import UserMixin
+import datetime
 import json
+from json import JSONEncoder
 from werkzeug.security import generate_password_hash, check_password_hash
 
+
+class DateTimeEncoder(JSONEncoder):
+        #Override the default method
+        def default(self, obj):
+            if isinstance(obj, (datetime.date, datetime.datetime)):
+                return obj.isoformat()
 
 class LoaiSanPhams(db.Model):
     __tablename__ = 'LoaiSanPhams'
@@ -51,8 +60,8 @@ class ChiTietSanPhams(db.Model):
                 "anhTo": self.AnhTo,
                 "anhNho": self.AnhNho,
                 "mau": self.Mau,
-                "gia": self.AnhTo,
-                "soLuong": self.SoLuong}
+                "gia": self.Gia,
+                "soLuong": self.SoLuong}    
 
 
 class ChiTietHoaDons(db.Model):
@@ -84,18 +93,39 @@ class HoaDons(db.Model):
                 "maKhachHang": self.MaKhachHang,
                 "diaChiNhanHang": self.DiaChiNhanHang,
                 "hinhThucThanhToan": self.HinhThucThanhToan,
-                "ngayThanhToan": self.NgayThanhToan}
+                "ngayThanhToan": json.dumps(self.NgayThanhToan, indent=4, cls=DateTimeEncoder)}
 
 
-class KhachHangs(db.Model):
+@login.user_loader
+def load_user(id):
+    return KhachHangs.query.get(int(id))
+
+class KhachHangs(UserMixin,db.Model):
     __tablename__ = 'KhachHangs'
     MaKhachHang = db.Column(db.Integer, primary_key=True)
     TenKhachHang = db.Column(db.String(128))
     SoDienThoai = db.Column(db.String(128))
     DiaChi = db.Column(db.String(128))
+    Username = db.Column(db.String(128))
+    Password = db.Column(db.String(128))
+    
+    def get_id(self):
+        return self.MaKhachHang
 
     def serialize(self):
         return {"maKhachHang": self.MaKhachHang,
                 "tenKhachHang": self.TenKhachHang,
                 "soDienThoai": self.SoDienThoai,
-                "diaChi": self.DiaChi}
+                "diaChi": self.DiaChi,
+                "username": self.Username,
+                "password": self.Password}
+        
+class Admin(UserMixin, db.Model):
+    __tablename__ = 'admin'
+    id = db.Column(db.Integer, primary_key = True)
+    Username = db.Column(db.String(128))
+    Password = db.Column(db.String(128))
+    def serialize(self):
+        return {"username": self.Username,
+                "password": self.Password}
+    

@@ -24,3 +24,7 @@ def deleteKhachHang(MaKhachHang):
     db.session.delete(KhachHang)
     db.session.commit()
     return "Delete Success"
+
+def checkLoginKhachHang(username, password):
+    KhachHang = KhachHangs.query.filter_by(Username = username, Password = password).first_or_404()
+    return KhachHang
