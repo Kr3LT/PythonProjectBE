@@ -6,7 +6,7 @@ from flask import request, jsonify, send_from_directory, send_file
 from werkzeug.urls import url_parse
 from werkzeug.utils import secure_filename
 from app.models import SanPhams,  ChiTietSanPhams
-from app.Service import SanPhamService, ChiTietSanPhamService, KhachHangService, LoaiSanPhamService, ChiTietHoaDonService, HoaDonService
+from app.Service import SanPhamService, ChiTietSanPhamService, KhachHangService, LoaiSanPhamService, ChiTietHoaDonService, HoaDonService, AdminService
 import json
 
 
@@ -438,5 +438,19 @@ def customerLogout():
     logout_user()
     return "User Logged Out", 200
     
-    
+@app.route('/admin/login', methods = ['POST'])
+def adminLogin():
+    loginInfo = request.get_json()
+    username = loginInfo['username']
+    password = loginInfo['password']
+    admin = AdminService.checkLoginAdmin(username=username, password=password)
+    if admin is None:
+        return "Wrong Username/Password", 200
+    login_user(admin)
+    return jsonify(admin.serialize())
+
+@app.route('/admin/logout', methods = ["GET"])
+def adminLogout():
+    logout_user()
+    return "Admin Logged Out", 200
 
