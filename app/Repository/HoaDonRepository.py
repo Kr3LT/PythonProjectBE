@@ -24,20 +24,19 @@ def GetById(maHoaDon):
     return HoaDons.query.filter(HoaDons.MaHoaDon == maHoaDon).first()
 
 
-def Create(maKhachHang, diaChiNhanHang, hinhThucThanhToan, ngayThanhToan):
+def Create(maKhachHang, diaChiNhanHang, hinhThucThanhToan):
     hoaDon = HoaDons(MaKhachHang = maKhachHang, DiaChiNhanHang = diaChiNhanHang,
-                     HinhThucThanhToan = hinhThucThanhToan, NgayThanhToan = ngayThanhToan)
+                     HinhThucThanhToan = hinhThucThanhToan)
     db.session.add(hoaDon)
     db.session.commit()
     return hoaDon
 
 
-def Update(maHoaDon, maKhachHang, diaChiNhanHang, hinhThucThanhToan, ngayThanhToan):
+def Update(maHoaDon, maKhachHang, diaChiNhanHang, hinhThucThanhToan):
     hoaDon = HoaDons.query.filter(HoaDons.MaHoaDon == maHoaDon).first()
     hoaDon.MaKhachHang = maKhachHang
     hoaDon.DiaChiNhanHang = diaChiNhanHang
     hoaDon.HinhThucThanhToan = hinhThucThanhToan
-    hoaDon.NgayThanhToan = ngayThanhToan
     db.session.commit()
     return hoaDon
 

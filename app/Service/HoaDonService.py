@@ -18,12 +18,12 @@ def GetById(maHoaDon):
     return HoaDonRepository.GetById(maHoaDon)
 
 
-def Create(maKhachHang, diaChiNhanHang, hinhThucThanhToan, ngayThanhToan):
-    return HoaDonRepository.Create(maKhachHang, diaChiNhanHang, hinhThucThanhToan, ngayThanhToan)
+def Create(maKhachHang, diaChiNhanHang, hinhThucThanhToan):
+    return HoaDonRepository.Create(maKhachHang, diaChiNhanHang, hinhThucThanhToan)
 
 
-def Update(maHoaDon, maKhachHang, diaChiNhanHang, hinhThucThanhToan, ngayThanhToan):
-    return HoaDonRepository.Update(maHoaDon, maKhachHang, diaChiNhanHang, hinhThucThanhToan, ngayThanhToan)
+def Update(maHoaDon, maKhachHang, diaChiNhanHang, hinhThucThanhToan):
+    return HoaDonRepository.Update(maHoaDon, maKhachHang, diaChiNhanHang, hinhThucThanhToan)
 
 
 def Delete(maHoaDon):
