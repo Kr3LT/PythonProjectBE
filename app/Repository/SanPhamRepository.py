@@ -1,8 +1,8 @@
 from app.models import SanPhams
 from app import db
 
-def getSanPhambyLoaispId(category_id):
-	return SanPhams.query.filter_by(MaLoaiSanPham=id).first_or_404()
+def getSanPhambyLoaispId(MaLoaiSanPham):
+	return SanPhams.query.filter_by(MaLoaiSanPham=MaLoaiSanPham).all()
 
 def createSanPham(TenSanPham, Thumbnail, MaLoaiSanPham):
     newSanpham = SanPhams(TenSanPham=TenSanPham
@@ -16,7 +16,7 @@ def getAllSanPham():
     return SanPhams.query.all()
 
 def getSanPhamByName(TenSanPham):
-    return SanPhams.query.filter(SanPhams.TenSanPham.like('%'+TenSanPham+'%')).first_or_404()
+    return SanPhams.query.filter(SanPhams.TenSanPham.like('%'+TenSanPham+'%')).all()
 
 def getSanPhamById(product_id):
     return SanPhams.query.filter_by(MaSanPham=product_id).first_or_404()

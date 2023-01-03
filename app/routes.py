@@ -25,7 +25,6 @@ def serve_image(filename):
 # Sản phẩm:
 
 @app.route('/product', methods=['POST'])
-@login_required
 def createProduct():
     ProductForm = request.form    
     ProductThumbnail = request.files['thumbnail']
@@ -65,12 +64,14 @@ def getProductByProductId(product_id):
 
 @app.route('/product/<TenSanPham>/', methods=['GET'])
 def getProductByProductName(TenSanPham):
-    Product = SanPhamService.getSanPhamByName(TenSanPham)
-    return jsonify(Product.serialize())
+    ProductList = SanPhamService.getSanPhamByName(TenSanPham)
+    list = []
+    for product in ProductList:
+        list.append(product.serialize())
+    return json.dumps(list, indent=4)
 
 
 @app.route('/product/<int:product_id>', methods=['POST'])
-@login_required
 def updateProductByProductId(product_id):
     ProductForm = request.form
     ProductThumbnail = request.files['thumbnail']
@@ -88,7 +89,6 @@ def updateProductByProductId(product_id):
     return "Update product Success", 200
 
 @app.route('/product/<int:product_id>', methods=['POST'])
-@login_required
 def deleteProductByProductId(product_id):
     SanPhamService.deleteSanPham(MaSanPham=product_id)
     return "Delete product Success", 200
@@ -199,7 +199,7 @@ def deleteProductDetailByProductDetailId(product_detail_id):
 
 @app.route('/product/category/<int:category_id>', methods= ['GET'])
 def getProductByCategoryId(category_id):
-    Product = SanPhamService.getSanPhambyLoaiId(MaLoaiSanPham=category_id)
+    Product = SanPhamService.getSanPhambyLoaispId(MaLoaiSanPham=category_id)
     list = []
     for product in Product:
         list.append(product.serialize())
@@ -226,7 +226,6 @@ def getHoaDonDaThanhToan():
 
 
 @app.route("/purchase-history/<int:maKhachHang>", methods=["GET"])
-@login_required
 def GetHoaDonByMaKhachHang(maKhachHang):
     list = []
     for product in HoaDonService.GetHoaDonByMaKhachHang(maKhachHang):
@@ -235,19 +234,16 @@ def GetHoaDonByMaKhachHang(maKhachHang):
 
 
 @app.route("/xac-nhan/<int:maHoaDon>", methods=["PUT"])
-@login_required
 def XacNhanHoaDon(maHoaDon):
     return jsonify(HoaDonService.XacNhanHoaDon(maHoaDon).serialize())
 
 
 @app.route("/get-by-id/<int:maHoaDon>", methods=["GET"])
-@login_required
 def GetHoaDonById(maHoaDon):
     return jsonify(HoaDonService.GetById(maHoaDon).serialize())
 
 
 @app.route("/create-hoa-don", methods=["POST"])
-@login_required
 def CreateHoaDon():
     HoaDonJson = request.get_json()
     HoaDon = HoaDonService.Create(maKhachHang = HoaDonJson['MaKhachHang'],
@@ -259,7 +255,6 @@ def CreateHoaDon():
 
 
 @app.route("/update-hoa-don", methods=["PUT"])
-@login_required
 def UpdateHoaDon():
     HoaDonJson = request.get_json()
     HoaDon = HoaDonService.Update(maHoaDon= HoaDonJson['MaHoaDon'],
@@ -272,7 +267,6 @@ def UpdateHoaDon():
 
 
 @app.route("/delete-hoa-don/<int:maHoaDon>", methods=["DELETE"])
-@login_required
 def Delete(maHoaDon):
     return HoaDonService.Delete(maHoaDon)
     
@@ -286,7 +280,6 @@ def ConfirmPayment(maHoaDon):
     return json.dumps(list, indent=4)
 
 @app.route("/tong-tien/<int:maKhachHang>", methods=["GET"])
-@login_required
 def TongTienDaMua(maKhachHang):
     return jsonify(HoaDonService.TongTienDaMua(maKhachHang = maKhachHang))
 
@@ -294,7 +287,6 @@ def TongTienDaMua(maKhachHang):
 # Chi tiết hóa đơn:
 
 @app.route("/detail-purchase-history/<int:maHoaDon>", methods=["GET"])
-@login_required
 def GetByMaHoaDon(maHoaDon):
     list = []
     for product in ChiTietHoaDonService.GetByMaHoaDon(maHoaDon):
@@ -303,7 +295,6 @@ def GetByMaHoaDon(maHoaDon):
 
 
 @app.route("/create-chi-tiet-hoa-don", methods=["POST"])
-@login_required
 def CreateChiTietHoaDon():
     ChiTietHoaDonJson = request.get_json()
     ChiTietHoaDon = ChiTietHoaDonService.Create(maHoaDon = ChiTietHoaDonJson['MaHoaDon'],
@@ -316,7 +307,6 @@ def CreateChiTietHoaDon():
 
 
 @app.route("/update-chi-tiet-hoa-don", methods=["PUT"])
-@login_required
 def UpdateChiTietHoaDon():
     ChiTietHoaDonJson = request.get_json()
     ChiTietHoaDon = ChiTietHoaDonService.Update(maChiTietHoaDon = ChiTietHoaDonJson['MaChiTietHoaDon'],
@@ -330,13 +320,11 @@ def UpdateChiTietHoaDon():
 
 
 @app.route("/delete-chi-tiet-hoa-don/<int:maChiTietHoaDon>", methods=["DELETE"])
-@login_required
 def DeleteChiTietHoaDon(maChiTietHoaDon):
     return ChiTietHoaDonService.Delete(maChiTietHoaDon)
 
 
 @app.route("/tong-tien-hoa-don/<int:maHoaDon>", methods=["GET"])
-@login_required
 def TongTienHoaDon(maHoaDon):
     return jsonify(ChiTietHoaDonService.TongTien(maHoaDon = maHoaDon))
 
@@ -357,7 +345,6 @@ def getCategoryById(MaLoaiSanPham):
     return jsonify(Category.serialize())
 
 @app.route('/category', methods = ['POST'])
-@login_required
 def createCategory():
     CategoryJson = request.get_json()
     Category = LoaiSanPhamService.createLoaiSanPham(TenLoaiSanPham= CategoryJson['TenLoaiSanPham'])
@@ -366,7 +353,6 @@ def createCategory():
     return "Create Category Success", 201
 
 @app.route('/category/<int:MaLoaiSanPham>', methods = ['POST'])
-@login_required
 def updateCategoryByCategoryId(MaLoaiSanPham):
     CategoryJson = request.get_json()
     Category = LoaiSanPhamService.updateLoaiSanPham(MaLoaiSanPham = MaLoaiSanPham, TenLoaiSanPham = CategoryJson['TenLoaiSanPham'])
@@ -376,7 +362,6 @@ def updateCategoryByCategoryId(MaLoaiSanPham):
 
 
 @app.route('/category/<int:MaLoaiSanPham>', methods = ['DELETE'])
-@login_required
 def deleteCategoryByCategoryId(MaLoaiSanPham):
     LoaiSanPhamService.deleteLoaiSanPham(MaLoaiSanPham = MaLoaiSanPham)
     return "Delete Category Success",200
@@ -404,7 +389,6 @@ def createCustomer():
     return "Create Customer Success", 201
 
 @app.route('/customer/<int:MaKhachHang>', methods = ['POST'])
-@login_required
 def updateCustomerByCustomerId(MaKhachHang):
     CustomerJson = request.get_json()
     
@@ -441,7 +425,7 @@ def adminLogin():
     loginInfo = request.get_json()
     username = loginInfo['username']
     password = loginInfo['password']
-    admin = AdminService.checkLoginAdmin(username=username, password=password)
+    admin = AdminService.checkLogin(username=username, password=password)
     if admin is None:
         return "Wrong Username/Password", 200
     login_user(admin)
