@@ -4,10 +4,10 @@ def getAllSanPham():
     return SanPhamRepository.getAllSanPham()
 
 def getSanPhambyLoaispId(MaLoaiSanPham):
-	return SanPhamRepository.getSanPhambyLoaiId(MaLoaiSanPham=MaLoaiSanPham)
+	return SanPhamRepository.getSanPhambyLoaispId(MaLoaiSanPham=MaLoaiSanPham)
 
 def getSanPhamByName(TenSanPham):
-    return SanPhamRepository.getSanPhamByName(TenSanPham)
+    return SanPhamRepository.getSanPhamByName(TenSanPham = TenSanPham)
 
 def getSanPhamById(product_id):
     return SanPhamRepository.getSanPhamById(product_id = product_id)
