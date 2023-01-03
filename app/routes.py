@@ -89,7 +89,6 @@ def updateProductByProductId(product_id):
     return "Update product Success", 200
 
 @app.route('/product/<int:product_id>', methods=['POST'])
-
 def deleteProductByProductId(product_id):
     SanPhamService.deleteSanPham(MaSanPham=product_id)
     return "Delete product Success", 200
