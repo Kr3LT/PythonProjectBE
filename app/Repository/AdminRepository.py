@@ -20,8 +20,6 @@ def Delete(id):
     return "Deleted"
 
 def checkLogin(username, password):
-    admin = Admin.query.filter(Admin.Username == username & Admin.Password == password).first()
-    if admin is None:
-        return None
+    admin = Admin.query.filter_by(Username = username, Password = password).first_or_404()
     return admin
     

@@ -65,8 +65,11 @@ def getProductByProductId(product_id):
 
 @app.route('/product/<TenSanPham>/', methods=['GET'])
 def getProductByProductName(TenSanPham):
-    Product = SanPhamService.getSanPhamByName(TenSanPham)
-    return jsonify(Product.serialize())
+    ProductList = SanPhamService.getSanPhamByName(TenSanPham)
+    list = []
+    for product in ProductList:
+        list.append(product.serialize())
+    return json.dumps(list, indent=4)
 
 
 @app.route('/product/<int:product_id>', methods=['POST'])
@@ -199,7 +202,7 @@ def deleteProductDetailByProductDetailId(product_detail_id):
 
 @app.route('/product/category/<int:category_id>', methods= ['GET'])
 def getProductByCategoryId(category_id):
-    Product = SanPhamService.getSanPhambyLoaiId(MaLoaiSanPham=category_id)
+    Product = SanPhamService.getSanPhambyLoaispId(MaLoaiSanPham=category_id)
     list = []
     for product in Product:
         list.append(product.serialize())
@@ -441,7 +444,7 @@ def adminLogin():
     loginInfo = request.get_json()
     username = loginInfo['username']
     password = loginInfo['password']
-    admin = AdminService.checkLoginAdmin(username=username, password=password)
+    admin = AdminService.checkLogin(username=username, password=password)
     if admin is None:
         return "Wrong Username/Password", 200
     login_user(admin)
