@@ -19,7 +19,7 @@ def getSanPhamByName(TenSanPham):
     return SanPhams.query.filter(SanPhams.TenSanPham.like('%'+TenSanPham+'%')).first_or_404()
 
 def getSanPhamById(product_id):
-    return SanPhams.query.filter_by(MaSanPham=id).first_or_404()
+    return SanPhams.query.filter_by(MaSanPham=product_id).first_or_404()
 
 
 def updateSanPham(MaSanPham, TenSanPham, Thumbnail, MaLoaiSanPham):
