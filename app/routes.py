@@ -252,8 +252,7 @@ def CreateHoaDon():
     HoaDonJson = request.get_json()
     HoaDon = HoaDonService.Create(maKhachHang = HoaDonJson['MaKhachHang'],
                                     diaChiNhanHang = HoaDonJson['DiaChiNhanHang'],
-                                    hinhThucThanhToan = HoaDonJson['HinhThucThanhToan'], 
-                                    ngayThanhToan = HoaDonJson['NgayThanhToan'])
+                                    hinhThucThanhToan = HoaDonJson['HinhThucThanhToan'])
     if HoaDon is None:
         return 'Create Hoa Don Fail',500
     return "Create Hoa Don Success", 201
@@ -266,8 +265,7 @@ def UpdateHoaDon():
     HoaDon = HoaDonService.Update(maHoaDon= HoaDonJson['MaHoaDon'],
                                     maKhachHang = HoaDonJson['MaKhachHang'],
                                     diaChiNhanHang = HoaDonJson['DiaChiNhanHang'],
-                                    hinhThucThanhToan = HoaDonJson['HinhThucThanhToan'],    
-                                    ngayThanhToan=HoaDonJson['NgayThanhToan'])
+                                    hinhThucThanhToan = HoaDonJson['HinhThucThanhToan'])
     if HoaDon is None:
         return 'Update Hoa Don Fail',500
     return "Update Hoa Don Success", 201
