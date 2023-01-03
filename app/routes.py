@@ -251,7 +251,7 @@ def CreateHoaDon():
                                     hinhThucThanhToan = HoaDonJson['HinhThucThanhToan'])
     if HoaDon is None:
         return 'Create Hoa Don Fail',500
-    return "Create Hoa Don Success", 201
+    return jsonify(HoaDon.MaHoaDon)
 
 
 @app.route("/update-hoa-don", methods=["PUT"])
@@ -263,7 +263,7 @@ def UpdateHoaDon():
                                     hinhThucThanhToan = HoaDonJson['HinhThucThanhToan'])
     if HoaDon is None:
         return 'Update Hoa Don Fail',500
-    return "Update Hoa Don Success", 201
+    return jsonify(HoaDon.MaHoaDon)
 
 
 @app.route("/delete-hoa-don/<int:maHoaDon>", methods=["DELETE"])
@@ -285,6 +285,13 @@ def TongTienDaMua(maKhachHang):
 
 # ===================================================================================================== #
 # Chi tiết hóa đơn:
+@app.route("/all-detail-purchase/", methods=["GET"])
+def GetAll():
+    list = []
+    for product in ChiTietHoaDonService.GetAll():
+        list.append(product.serialize())
+    return json.dumps(list, indent=4)
+
 
 @app.route("/detail-purchase-history/<int:maHoaDon>", methods=["GET"])
 def GetByMaHoaDon(maHoaDon):

@@ -1,6 +1,10 @@
 from app.Repository import ChiTietHoaDonRepository
 
 
+def GetAll():
+    return ChiTietHoaDonRepository.GetAll()
+
+
 def GetByMaHoaDon(maHoaDon):
     return ChiTietHoaDonRepository.GetByMaHoaDon(maHoaDon)
 
