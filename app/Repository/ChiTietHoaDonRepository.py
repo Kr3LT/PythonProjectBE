@@ -2,6 +2,10 @@ from app.models import ChiTietHoaDons
 from app import db
 
 
+def GetAll():
+    return ChiTietHoaDons.query.all()
+
+
 def GetByMaHoaDon(maHoaDon):
     return ChiTietHoaDons.query.filter(ChiTietHoaDons.MaHoaDon == maHoaDon).all()
 
