@@ -88,7 +88,7 @@ def updateProductByProductId(product_id):
         return "Update product fails", 500
     return "Update product Success", 200
 
-@app.route('/product/<int:product_id>', methods=['POST'])
+@app.route('/product/<int:product_id>', methods=['DELETE'])
 def deleteProductByProductId(product_id):
     SanPhamService.deleteSanPham(MaSanPham=product_id)
     return "Delete product Success", 200
@@ -166,7 +166,7 @@ def createProductDetail():
 @app.route("/product-detail/<int:product_detail_id>", methods = ["POST"])
 def updateProductDetailByProductDetailId(product_detail_id):
     DetailProductForm = request.form
-    Action = DetailProductForm['action']    
+    # Action = DetailProductForm['action']    
     DetailProductAnhLon = request.files['anhLon']
     DetailProductAnhNho = request.files['anhNho']
     AnhLonfilename = secure_filename(DetailProductAnhLon.filename)
