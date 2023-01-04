@@ -33,7 +33,7 @@ def createProduct():
         flash('No Thumbnail uploaded')        
     elif ProductThumbnail and allowed_file(ProductThumbnail.filename):
         filename = secure_filename(ProductThumbnail.filename)
-        path = os.path.join("\static\Images", filename)
+        path = os.path.join(app.config["UPLOAD_FOLDER"], filename)
         ProductThumbnail.save(path)    
     Product = SanPhamService.createSanPham(TenSanPham=ProductForm['TenSanPham']
                                            , Thumbnail=ProductThumbnail.filename, MaLoaiSanPham=ProductForm['MaLoaiSanPham'])
@@ -79,7 +79,7 @@ def updateProductByProductId(product_id):
         flash('No Thumbnail uploaded')
     if ProductThumbnail and allowed_file(ProductThumbnail.filename):
         filename = secure_filename(ProductThumbnail.filename)
-        path = os.path.join("\static\Images", filename)
+        path = os.path.join(app.config["UPLOAD_FOLDER"], filename)
         ProductThumbnail.save(path)
     Product = SanPhamService.updateSanPham(MaSanPham=product_id, TenSanPham=ProductForm['TenSanPham'],
                                                Thumbnail=ProductThumbnail.filename,
