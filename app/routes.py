@@ -19,7 +19,7 @@ def allowed_file(filename):
 
 @app.route('/img/<path:filename>')
 def serve_image(filename):          
-    return send_from_directory(app.config["UPLOAD_FOLDER"], filename)
+    return send_from_directory(app.config["GET_FOLDER"], filename)
 
 # ===================================================================================================== #
 # Sản phẩm:

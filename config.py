@@ -8,4 +8,5 @@ class Config:
     SQLALCHEMY_DATABASE_URI = 'sqlite:///' + os.path.join(basedir, 'app.db')
     SQLALCHEMY_TRACK_MODIFICATIONS = False
     UPLOAD_FOLDER = './static/Images'
+    GET_FOLDER = '..\static\Images'
     ALLOWED_EXTENSIONS = set(['png', 'jpg', 'jpeg', 'gif'])
